@@ -5,7 +5,6 @@ struct BSTNode {
     BSTNode* left;
     BSTNode* right;
 };
-AnH Quan
 class DeadlineBST {
 public:
     BSTNode* root;
