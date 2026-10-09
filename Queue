@@ -21,11 +21,25 @@ void HangDoiDeadLine::khoiTao(){
      tail=NULL;
      size=0;   
 }
-\\ Kiểm tra rỗng
+// Kiểm tra rỗng
 bool HangDoiDeadLine::rong(){
      return head=NULL;
 }
-
+// Thêm vào cuối Queue
+void HangDoiDeadLine::them(Congviec cv){
+     NodeQueue *p= new NodeQueue;
+     p->data=cv;
+     p->next=NULL;
+     if(head == NULL){
+        head=p;
+        tail=p;
+ }
+     else {
+      tail->next=p;
+      tail=p;
+     }
+  size++;
+}
 
 
 
