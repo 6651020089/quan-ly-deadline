@@ -1,1 +1,19 @@
+typedef struct nodeQueue{
+      Congviec data;
+     struct nodeQueue *next;
+}NodeQueue;
+typedef struct hangdoi{
+     public:
+     NodeQueue *head;
+     NodeQueue *tail;
+     int size;
+     void khoiTao();
+     bool rong();
+     void them(Congviec cv);
+     Congviec layRa();
+     void hienThi();
+     void xoaHet();
+     int soLuong();    
+}HangDoiDeadLine;
+
 
