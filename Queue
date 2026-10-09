@@ -15,5 +15,17 @@ typedef struct hangdoi{
      void xoaHet();
      int soLuong();    
 }HangDoiDeadLine;
+// Khởi tạo  Queue
+void HangDoiDeadLine::khoiTao(){
+     head=NULL;
+     tail=NULL;
+     size=0;   
+}
+\\ Kiểm tra rỗng
+bool HangDoiDeadLine::rong(){
+     return head=NULL;
+}
+
+
 
 
