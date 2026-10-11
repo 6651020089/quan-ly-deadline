@@ -1,1 +1,907 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <cctype>
+#include <iomanip>
+
+using namespace std;
+
+// ============================================================
+// CẤU TRÚC TASK
+// ============================================================
+
+struct TaskNode {
+    string name;        // Tên công việc
+    string subject;     // Môn học / chủ đề
+    bool completed;     // true = đã hoàn thành
+    int priority;       // 1 = thấp, 2 = trung bình, 3 = cao
+
+    TaskNode* next;
+
+    TaskNode(
+        string n,
+        string s,
+        bool c,
+        int p
+    ) {
+        name = n;
+        subject = s;
+        completed = c;
+        priority = p;
+        next = nullptr;
+    }
+};
+
+
+// ============================================================
+// HÀM IN TASK
+// ============================================================
+
+void printTask(TaskNode* task) {
+
+    cout << "\n";
+    cout << "----------------------------------------\n";
+
+    cout << "Ten cong viec : "
+         << task->name << endl;
+
+    cout << "Mon / Chu de  : "
+         << task->subject << endl;
+
+    cout << "Trang thai     : ";
+
+    if (task->completed)
+        cout << "Da hoan thanh";
+    else
+        cout << "Chua hoan thanh";
+
+    cout << endl;
+
+    cout << "Do uu tien     : ";
+
+    switch (task->priority) {
+
+        case 1:
+            cout << "Thap";
+            break;
+
+        case 2:
+            cout << "Trung binh";
+            break;
+
+        case 3:
+            cout << "Cao";
+            break;
+
+        default:
+            cout << "Khong xac dinh";
+    }
+
+    cout << endl;
+
+    cout << "----------------------------------------\n";
+}
+
+
+// ============================================================
+// HÀM CHUYỂN CHỮ THƯỜNG
+// ============================================================
+
+string toLowerCase(string text) {
+
+    transform(
+        text.begin(),
+        text.end(),
+        text.begin(),
+        [](unsigned char c) {
+            return static_cast<char>(tolower(c));
+        }
+    );
+
+    return text;
+}
+
+
+// ============================================================
+// 1. TÌM THEO TÊN
+// ============================================================
+
+void searchByName(
+    TaskNode* head,
+    string keyword
+) {
+
+    bool found = false;
+
+    keyword = toLowerCase(keyword);
+
+    TaskNode* current = head;
+
+    while (current != nullptr) {
+
+        string taskName =
+            toLowerCase(current->name);
+
+        if (
+            taskName.find(keyword)
+            != string::npos
+        ) {
+
+            printTask(current);
+
+            found = true;
+        }
+
+        current = current->next;
+    }
+
+    if (!found) {
+
+        cout << "\n";
+        cout << "Khong tim thay cong viec co ten: "
+             << keyword << endl;
+    }
+}
+
+
+// ============================================================
+// 2. TÌM THEO MÔN / CHỦ ĐỀ
+// ============================================================
+
+void searchBySubject(
+    TaskNode* head,
+    string subject
+) {
+
+    bool found = false;
+
+    subject = toLowerCase(subject);
+
+    TaskNode* current = head;
+
+    while (current != nullptr) {
+
+        string currentSubject =
+            toLowerCase(current->subject);
+
+        if (
+            currentSubject.find(subject)
+            != string::npos
+        ) {
+
+            printTask(current);
+
+            found = true;
+        }
+
+        current = current->next;
+    }
+
+    if (!found) {
+
+        cout << "\n";
+        cout << "Khong tim thay cong viec thuoc mon: "
+             << subject << endl;
+    }
+}
+
+
+// ============================================================
+// 3. LỌC THEO TRẠNG THÁI
+// ============================================================
+
+void filterByStatus(
+    TaskNode* head,
+    bool completed
+) {
+
+    bool found = false;
+
+    TaskNode* current = head;
+
+    while (current != nullptr) {
+
+        if (
+            current->completed == completed
+        ) {
+
+            printTask(current);
+
+            found = true;
+        }
+
+        current = current->next;
+    }
+
+    if (!found) {
+
+        if (completed) {
+
+            cout << "\n";
+            cout << "Khong co cong viec da hoan thanh.\n";
+
+        } else {
+
+            cout << "\n";
+            cout << "Khong co cong viec chua hoan thanh.\n";
+        }
+    }
+}
+
+
+// ============================================================
+// 4. LỌC THEO ĐỘ ƯU TIÊN
+// ============================================================
+
+void filterByPriority(
+    TaskNode* head,
+    int priority
+) {
+
+    bool found = false;
+
+    TaskNode* current = head;
+
+    while (current != nullptr) {
+
+        if (
+            current->priority == priority
+        ) {
+
+            printTask(current);
+
+            found = true;
+        }
+
+        current = current->next;
+    }
+
+    if (!found) {
+
+        cout << "\n";
+        cout << "Khong co cong viec voi muc uu tien "
+             << priority << ".\n";
+    }
+}
+
+
+// ============================================================
+// 5. ĐẾM TASK ĐÃ HOÀN THÀNH
+// ============================================================
+
+int countCompleted(
+    TaskNode* head
+) {
+
+    int count = 0;
+
+    TaskNode* current = head;
+
+    while (current != nullptr) {
+
+        if (current->completed) {
+            count++;
+        }
+
+        current = current->next;
+    }
+
+    return count;
+}
+
+
+// ============================================================
+// 6. ĐẾM TASK CHƯA HOÀN THÀNH
+// ============================================================
+
+int countUncompleted(
+    TaskNode* head
+) {
+
+    int count = 0;
+
+    TaskNode* current = head;
+
+    while (current != nullptr) {
+
+        if (!current->completed) {
+            count++;
+        }
+
+        current = current->next;
+    }
+
+    return count;
+}
+
+
+// ============================================================
+// 7. ĐẾM TASK THEO ĐỘ ƯU TIÊN
+// ============================================================
+
+int countPriority(
+    TaskNode* head,
+    int priority
+) {
+
+    int count = 0;
+
+    TaskNode* current = head;
+
+    while (current != nullptr) {
+
+        if (
+            current->priority == priority
+        ) {
+
+            count++;
+        }
+
+        current = current->next;
+    }
+
+    return count;
+}
+
+
+// ============================================================
+// 8. HIỂN THỊ THỐNG KÊ
+// ============================================================
+
+void showStatistics(
+    TaskNode* head
+) {
+
+    int completed =
+        countCompleted(head);
+
+    int uncompleted =
+        countUncompleted(head);
+
+    int lowPriority =
+        countPriority(head, 1);
+
+    int mediumPriority =
+        countPriority(head, 2);
+
+    int highPriority =
+        countPriority(head, 3);
+
+    int total =
+        completed + uncompleted;
+
+
+    double percent = 0;
+
+    if (total > 0) {
+
+        percent =
+            static_cast<double>(completed)
+            / total
+            * 100;
+    }
+
+
+    cout << "\n";
+    cout << "============================================\n";
+    cout << "              THONG KE TASK\n";
+    cout << "============================================\n";
+
+    cout << left;
+
+    cout << setw(25)
+         << "Tong cong viec"
+         << ": "
+         << total
+         << endl;
+
+    cout << setw(25)
+         << "Da hoan thanh"
+         << ": "
+         << completed
+         << endl;
+
+    cout << setw(25)
+         << "Chua hoan thanh"
+         << ": "
+         << uncompleted
+         << endl;
+
+    cout << setw(25)
+         << "Uu tien thap"
+         << ": "
+         << lowPriority
+         << endl;
+
+    cout << setw(25)
+         << "Uu tien trung binh"
+         << ": "
+         << mediumPriority
+         << endl;
+
+    cout << setw(25)
+         << "Uu tien cao"
+         << ": "
+         << highPriority
+         << endl;
+
+    cout << setw(25)
+         << "Tien do"
+         << ": "
+         << fixed
+         << setprecision(1)
+         << percent
+         << "%"
+         << endl;
+
+    cout << "============================================\n";
+}
+
+
+// ============================================================
+// THÊM TASK
+// ============================================================
+
+void addTask(
+    TaskNode*& head,
+    string name,
+    string subject,
+    bool completed,
+    int priority
+) {
+
+    TaskNode* newTask =
+        new TaskNode(
+            name,
+            subject,
+            completed,
+            priority
+        );
+
+
+    if (head == nullptr) {
+
+        head = newTask;
+
+        return;
+    }
+
+
+    TaskNode* current = head;
+
+
+    while (
+        current->next != nullptr
+    ) {
+
+        current =
+            current->next;
+    }
+
+
+    current->next =
+        newTask;
+}
+
+
+// ============================================================
+// HIỂN THỊ TẤT CẢ TASK
+// ============================================================
+
+void displayAll(
+    TaskNode* head
+) {
+
+    if (head == nullptr) {
+
+        cout << "\nDanh sach cong viec rong.\n";
+
+        return;
+    }
+
+
+    TaskNode* current = head;
+
+
+    while (current != nullptr) {
+
+        printTask(current);
+
+        current =
+            current->next;
+    }
+}
+
+
+// ============================================================
+// MENU TÌM KIẾM
+// ============================================================
+
+void searchMenu(
+    TaskNode* head
+) {
+
+    int choice;
+
+
+    do {
+
+        cout << "\n";
+        cout << "============================================\n";
+        cout << "             TIM KIEM & LOC\n";
+        cout << "============================================\n";
+
+        cout << "  1. Tim theo ten\n";
+        cout << "  2. Tim theo mon / chu de\n";
+        cout << "  3. Loc da hoan thanh\n";
+        cout << "  4. Loc chua hoan thanh\n";
+        cout << "  5. Loc uu tien cao\n";
+        cout << "  6. Loc uu tien trung binh\n";
+        cout << "  7. Loc uu tien thap\n";
+        cout << "  0. Quay lai\n";
+
+        cout << "--------------------------------------------\n";
+
+        cout << "Nhap lua chon: ";
+
+        cin >> choice;
+
+        cin.ignore();
+
+
+        switch (choice) {
+
+            // -----------------------------------------
+            // TÌM THEO TÊN
+            // -----------------------------------------
+
+            case 1: {
+
+                string keyword;
+
+                cout << "\n";
+                cout << "Nhap ten cong viec can tim: ";
+
+                getline(
+                    cin,
+                    keyword
+                );
+
+                searchByName(
+                    head,
+                    keyword
+                );
+
+                break;
+            }
+
+
+            // -----------------------------------------
+            // TÌM THEO MÔN
+            // -----------------------------------------
+
+            case 2: {
+
+                string subject;
+
+                cout << "\n";
+                cout << "Nhap mon / chu de can tim: ";
+
+                getline(
+                    cin,
+                    subject
+                );
+
+                searchBySubject(
+                    head,
+                    subject
+                );
+
+                break;
+            }
+
+
+            // -----------------------------------------
+            // ĐÃ HOÀN THÀNH
+            // -----------------------------------------
+
+            case 3:
+
+                cout << "\n";
+                cout << "===== DA HOAN THANH =====\n";
+
+                filterByStatus(
+                    head,
+                    true
+                );
+
+                break;
+
+
+            // -----------------------------------------
+            // CHƯA HOÀN THÀNH
+            // -----------------------------------------
+
+            case 4:
+
+                cout << "\n";
+                cout << "===== CHUA HOAN THANH =====\n";
+
+                filterByStatus(
+                    head,
+                    false
+                );
+
+                break;
+
+
+            // -----------------------------------------
+            // ƯU TIÊN CAO
+            // -----------------------------------------
+
+            case 5:
+
+                cout << "\n";
+                cout << "===== UU TIEN CAO =====\n";
+
+                filterByPriority(
+                    head,
+                    3
+                );
+
+                break;
+
+
+            // -----------------------------------------
+            // ƯU TIÊN TRUNG BÌNH
+            // -----------------------------------------
+
+            case 6:
+
+                cout << "\n";
+                cout << "===== UU TIEN TRUNG BINH =====\n";
+
+                filterByPriority(
+                    head,
+                    2
+                );
+
+                break;
+
+
+            // -----------------------------------------
+            // ƯU TIÊN THẤP
+            // -----------------------------------------
+
+            case 7:
+
+                cout << "\n";
+                cout << "===== UU TIEN THAP =====\n";
+
+                filterByPriority(
+                    head,
+                    1
+                );
+
+                break;
+
+
+            case 0:
+
+                break;
+
+
+            default:
+
+                cout << "\n";
+                cout << "Lua chon khong hop le!\n";
+        }
+
+
+    } while (choice != 0);
+}
+
+
+// ============================================================
+// MENU CHÍNH
+// ============================================================
+
+void mainMenu(
+    TaskNode* head
+) {
+
+    int choice;
+
+
+    do {
+
+        cout << "\n\n";
+
+        cout << "============================================\n";
+        cout << "             DEADLINE MANAGER\n";
+        cout << "============================================\n";
+
+        cout << "  1. Xem tat ca cong viec\n";
+        cout << "  2. Tim kiem & Loc\n";
+        cout << "  3. Xem thong ke\n";
+        cout << "  0. Thoat\n";
+
+        cout << "============================================\n";
+
+        cout << "Nhap lua chon: ";
+
+        cin >> choice;
+
+
+        switch (choice) {
+
+            case 1:
+
+                cout << "\n";
+                cout << "========== TAT CA CONG VIEC ==========\n";
+
+                displayAll(head);
+
+                break;
+
+
+            case 2:
+
+                searchMenu(head);
+
+                break;
+
+
+            case 3:
+
+                showStatistics(head);
+
+                break;
+
+
+            case 0:
+
+                cout << "\n";
+                cout << "Da thoat chuong trinh.\n";
+
+                break;
+
+
+            default:
+
+                cout << "\n";
+                cout << "Lua chon khong hop le!\n";
+        }
+
+
+    } while (choice != 0);
+}
+
+
+// ============================================================
+// GIẢI PHÓNG LINKED LIST
+// ============================================================
+
+void deleteAll(
+    TaskNode*& head
+) {
+
+    TaskNode* current = head;
+
+    while (current != nullptr) {
+
+        TaskNode* temp =
+            current;
+
+        current =
+            current->next;
+
+        delete temp;
+    }
+
+    head = nullptr;
+}
+
+
+// ============================================================
+// MAIN
+// ============================================================
+
+int main() {
+
+    TaskNode* head = nullptr;
+
+
+    // ========================================================
+    // DỮ LIỆU MẪU
+    // ========================================================
+
+    addTask(
+        head,
+        "Lam bai tap C++",
+        "Lap trinh",
+        false,
+        3
+    );
+
+
+    addTask(
+        head,
+        "Lam bao cao",
+        "CSDL",
+        true,
+        2
+    );
+
+
+    addTask(
+        head,
+        "On tap Linked List",
+        "Lap trinh",
+        false,
+        3
+    );
+
+
+    addTask(
+        head,
+        "Lam slide thuyet trinh",
+        "Ky nang",
+        true,
+        1
+    );
+
+
+    addTask(
+        head,
+        "Lam bai tap OOP",
+        "Lap trinh",
+        false,
+        2
+    );
+
+
+    addTask(
+        head,
+        "On tap SQL",
+        "CSDL",
+        false,
+        3
+    );
+
+
+    addTask(
+        head,
+        "Viet bao cao C++",
+        "Lap trinh",
+        true,
+        2
+    );
+
+
+    addTask(
+        head,
+        "Chuan bi thuyet trinh",
+        "Ky nang",
+        false,
+        1
+    );
+
+
+    // ========================================================
+    // CHẠY CHƯƠNG TRÌNH
+    // ========================================================
+
+    mainMenu(head);
+
+
+    // ========================================================
+    // GIẢI PHÓNG BỘ NHỚ
+    // ========================================================
+
+    deleteAll(head);
+
+
+    return 0;
+}
 
