@@ -48,3 +48,9 @@ void NganXepLichSu::khoiTao(){
 
     size = 0;
 }
+// Kiểm tra rỗng
+bool NganXepLichSu::rong(){
+
+    return top == NULL;
+}
+
