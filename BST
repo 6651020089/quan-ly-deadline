@@ -1,1 +1,33 @@
+typedef struct nutcay{
 
+    CongViec data;
+
+    struct nutcay *left;
+
+    struct nutcay *right;
+
+}NutCay;
+
+
+typedef struct caydeadline{
+public:
+    NutCay *root;
+    int size;
+
+    void khoiTao();
+    NutCay *taoNut(CongViec cv);
+    NutCay *themNode(NutCay *p, CongViec cv);
+    void them(CongViec cv);
+
+    void duyetLNR(NutCay *p);
+    void duyetNLR(NutCay *p);
+    void duyetLRN(NutCay *p);
+
+    void tangDan();
+    void giamDan();
+
+    void hienThi();
+
+    void xoaCay(NutCay *p);
+    void xoaHet();
+}CayDeadline;
