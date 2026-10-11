@@ -1,20 +1,20 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
-struct BSTNode {
-    Task data;
-    BSTNode* left;
-    BSTNode* right;
+
+// ======================================================
+// 1. CẤU TRÚC CÔNG VIỆC
+// ======================================================
+
+const int MAX = 1000;
+
+struct CongViec{
+    int ma;
+    string ten;
+    string monHoc;
+    string hanChot;
+    int doUuTien;
+    bool daHoanThanh;
 };
-class DeadlineBST {
-public:
-    BSTNode* root;
 
-    void init() {
-        root = NULL;
-    }
-
-int main() {
-    cout << "So tay Hoc tap & Quan ly Deadline Sinh vien" << endl;
-
-
-}
+CongViec danhSachCongViec[MAX];
+int soLuongCongViec = 0;
