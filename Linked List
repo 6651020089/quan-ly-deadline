@@ -16,4 +16,41 @@ bool xoaTheoMa(int x);
 void hienthi();
 int soluong();
 }Slist;
+void Slist::init(){
+head =NULL;
+tail=NULL;
+size =0;
+}
+Node *Slist::createNode(int x){
+Node *p = new Node;
+p->data=x;
+p->next=NULL;
+return p;
+}
+void Slist::themDau(int x){
+Node *p =createNode(x);
+if(head ==NULL){
+head = p;
+tail =p;
+}
+else{
+p->next =head;
+head p;
+}
+size ++;
+}
+void Slist::themCuoi(int x){
+Node *p= createNode(x);
+if(head==NULL){
+head=p;
+tail=p;
+}
+else{
+tail->next=p;
+tail=p;
+}
+size++
+}
+
+
 
