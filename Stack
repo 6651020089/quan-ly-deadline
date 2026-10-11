@@ -53,4 +53,19 @@ bool NganXepLichSu::rong(){
 
     return top == NULL;
 }
+// Thêm vào Stack
+void NganXepLichSu::them(LichSu x){
+
+    NodeStack *p = new NodeStack;
+
+    p->data = x;
+
+    p->next = top;
+
+    top = p;
+
+    size++;
+}
+
+
 
