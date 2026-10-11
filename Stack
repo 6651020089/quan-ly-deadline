@@ -1,1 +1,49 @@
+struct LichSu{
 
+    string hanhDong;
+
+    CongViec congViec;
+};
+
+
+typedef struct nodeStack{
+
+    LichSu data;
+
+    struct nodeStack *next;
+
+}NodeStack;
+
+
+typedef struct nganxep{
+
+public:
+
+    NodeStack *top;
+
+    int size;
+
+    void khoiTao();
+
+    bool rong();
+
+    void them(LichSu x);
+
+    LichSu layRa();
+
+    void hienThi();
+
+    void xoaHet();
+
+    int soLuong();
+
+}NganXepLichSu;
+
+
+// Khởi tạo Stack
+void NganXepLichSu::khoiTao(){
+
+    top = NULL;
+
+    size = 0;
+}
