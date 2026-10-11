@@ -40,6 +40,25 @@ void HangDoiDeadLine::them(Congviec cv){
      }
   size++;
 }
+Congviec HangDoiDeadLine::layRa(){
+      Congviec rong;
+      rong.ma=-1;
+     if (head==NULL){
+        return rong;
+}
+     NodeQueue *p= head;
+     Congviec cv = p->data;
+     head = head ->next;
+     delete p;
+     size--; 
+     if ( head == NULL){
+        tail = NULL;
+   }
+      return cv;
+}
+void HangDoiDeadLine::hienThi(){
+      
 
+}
 
 
