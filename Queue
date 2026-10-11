@@ -57,8 +57,33 @@ Congviec HangDoiDeadLine::layRa(){
       return cv;
 }
 void HangDoiDeadLine::hienThi(){
-      
+       if (head == NULL){
+           cout<<" \nHang doi rong!\n";
+       return ;
+}
+    NodeQueue *p = head ;
+    cout <<"\n========== HANG DOI DEADLINE ==========\n";
+    
+  while(p != NULL){
 
+        cout << "\nMa: "
+             << p->data.ma;
+
+        cout << "\nTen: "
+             << p->data.ten;
+
+        cout << "\nMon: "
+             << p->data.monHoc;
+
+        cout << "\nHan: "
+             << p->data.hanChot;
+
+        cout << "\n---------------------------------------";
+
+        p = p->next;
+    }
+
+    cout << "\n";
 }
 
 
