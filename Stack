@@ -43,6 +43,7 @@ public:
 // Khởi tạo Stack
 void NganXepLichSu::khoiTao(){
 
+
     top = NULL;
 
     size = 0;
