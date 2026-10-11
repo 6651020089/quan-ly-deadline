@@ -1,1 +1,19 @@
+typedef struct node{
+int data;
+struct node *next;
+}Node;
+tupedef struct slist{
+public:
+Node *head;
+Node *tail;
+int size;
+void init();
+Node *createNode(int x);
+void themDau(int x);
+void themCuoi(int x);
+Node *timTheoMa(int x);
+bool xoaTheoMa(int x);
+void hienthi();
+int soluong();
+}Slist;
 
