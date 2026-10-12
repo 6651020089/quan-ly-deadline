@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <string>
 #include <algorithm>
@@ -6,7 +5,25 @@
 
 using namespace std;
 
-// Hàm chuyển chữ hoa thành chữ thường
+// Cau truc luu thong tin cong viec
+struct TaskNode {
+    string name;
+    string subject;
+    bool completed;
+    int priority;
+
+    TaskNode* next;
+
+    TaskNode(string n, string s, bool c, int p) {
+        name = n;
+        subject = s;
+        completed = c;
+        priority = p;
+        next = nullptr;
+    }
+};
+
+// Ham chuyen chu hoa thanh chu thuong
 string vietThuong(string text) {
     transform(
         text.begin(),
@@ -18,4 +35,73 @@ string vietThuong(string text) {
     );
 
     return text;
+}
+
+// Ham in thong tin mot cong viec
+void inTask(TaskNode* task) {
+    if (task == nullptr) {
+        cout << "Cong viec khong ton tai!\n";
+        return;
+    }
+
+    cout << "\n";
+    cout << "----------------------------------------\n";
+
+    cout << "Ten cong viec : "
+         << task->name << endl;
+
+    cout << "Mon / Chu de  : "
+         << task->subject << endl;
+
+    cout << "Trang thai    : ";
+
+    if (task->completed) {
+        cout << "Da hoan thanh";
+    } else {
+        cout << "Chua hoan thanh";
+    }
+
+    cout << endl;
+
+    cout << "Do uu tien    : ";
+
+    switch (task->priority) {
+        case 1:
+            cout << "Thap";
+            break;
+
+        case 2:
+            cout << "Trung binh";
+            break;
+
+        case 3:
+            cout << "Cao";
+            break;
+
+        default:
+            cout << "Khong xac dinh";
+    }
+
+    cout << endl;
+    cout << "----------------------------------------\n";
+}
+
+// Ham main
+int main() {
+    // Tao mot cong viec mau
+    TaskNode task(
+        "LAM BAI TAP C++",
+        "LAP TRINH",
+        false,
+        3
+    );
+
+    // In thong tin cong viec
+    inTask(&task);
+
+    // Minh hoa ham chuyen chu thuong
+    cout << "\nChuoi sau khi chuyen thanh chu thuong: "
+         << vietThuong(task.name) << endl;
+
+    return 0;
 }
