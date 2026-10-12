@@ -53,3 +53,38 @@ NutCay *CayDeadline::taoNut(CongViec cv){
 
     return p;
 }
+// Thêm Node vào BST
+NutCay *CayDeadline::themNode(
+    NutCay *p,
+    CongViec cv
+){
+
+    if(p == NULL){
+
+        size++;
+
+        return taoNut(cv);
+    }
+
+
+    if(cv.hanChot < p->data.hanChot){
+
+        p->left =
+        themNode(p->left, cv);
+    }
+    else{
+
+        p->right =
+        themNode(p->right, cv);
+    }
+
+
+    return p;
+}
+
+
+// Thêm vào cây
+void CayDeadline::them(CongViec cv){
+
+    root = themNode(root, cv);
+}
