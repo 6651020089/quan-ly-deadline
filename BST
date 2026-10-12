@@ -31,3 +31,25 @@ public:
     void xoaCay(NutCay *p);
     void xoaHet();
 }CayDeadline;
+// Khởi tạo cây
+void CayDeadline::khoiTao(){
+
+    root = NULL;
+
+    size = 0;
+}
+
+
+// Tạo Node
+NutCay *CayDeadline::taoNut(CongViec cv){
+
+    NutCay *p = new NutCay;
+
+    p->data = cv;
+
+    p->left = NULL;
+
+    p->right = NULL;
+
+    return p;
+}
