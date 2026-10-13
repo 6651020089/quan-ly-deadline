@@ -11,7 +11,6 @@ struct TaskNode {
     string subject;
     bool completed;
     int priority;
-
     TaskNode* next;
 
     TaskNode(string n, string s, bool c, int p) {
@@ -46,38 +45,28 @@ void inTask(TaskNode* task) {
 
     cout << "\n";
     cout << "----------------------------------------\n";
-
-    cout << "Ten cong viec : "
-         << task->name << endl;
-
-    cout << "Mon / Chu de  : "
-         << task->subject << endl;
+    cout << "Ten cong viec : " << task->name << endl;
+    cout << "Mon / Chu de  : " << task->subject << endl;
 
     cout << "Trang thai    : ";
-
-    if (task->completed) {
+    if (task->completed)
         cout << "Da hoan thanh";
-    } else {
+    else
         cout << "Chua hoan thanh";
-    }
 
     cout << endl;
-
     cout << "Do uu tien    : ";
 
     switch (task->priority) {
         case 1:
             cout << "Thap";
             break;
-
         case 2:
             cout << "Trung binh";
             break;
-
         case 3:
             cout << "Cao";
             break;
-
         default:
             cout << "Khong xac dinh";
     }
@@ -86,22 +75,89 @@ void inTask(TaskNode* task) {
     cout << "----------------------------------------\n";
 }
 
+// Ham them cong viec vao danh sach lien ket
+void addTask(TaskNode*& head, string name,
+             string subject, bool completed, int priority) {
+    TaskNode* newTask =
+        new TaskNode(name, subject, completed, priority);
+
+    if (head == nullptr) {
+        head = newTask;
+        return;
+    }
+
+    TaskNode* current = head;
+
+    while (current->next != nullptr) {
+        current = current->next;
+    }
+
+    current->next = newTask;
+}
+
+// Ham tim kiem cong viec theo ten
+void timTheoTen(TaskNode* head, string tenCanTim) {
+    bool found = false;
+
+    tenCanTim = vietThuong(tenCanTim);
+
+    TaskNode* current = head;
+
+    while (current != nullptr) {
+        string tenCongViec = vietThuong(current->name);
+
+        if (tenCongViec.find(tenCanTim) != string::npos) {
+            inTask(current);
+            found = true;
+        }
+
+        current = current->next;
+    }
+
+    if (!found) {
+        cout << "\nKhong tim thay cong viec co ten: "
+             << tenCanTim << endl;
+    }
+}
+
+// Ham giai phong bo nho danh sach lien ket
+void deleteAll(TaskNode*& head) {
+    while (head != nullptr) {
+        TaskNode* temp = head;
+        head = head->next;
+        delete temp;
+    }
+}
+
 // Ham main
 int main() {
-    // Tao mot cong viec mau
-    TaskNode task(
-        "LAM BAI TAP C++",
-        "LAP TRINH",
-        false,
-        3
-    );
+    // Tao danh sach cong viec
+    TaskNode* head = nullptr;
 
-    // In thong tin cong viec
-    inTask(&task);
+    addTask(head, "Lam bai tap C++", "Lap trinh", false, 3);
+    addTask(head, "Lam bao cao", "CSDL", true, 2);
+    addTask(head, "On tap Linked List", "Lap trinh", false, 3);
 
-    // Minh hoa ham chuyen chu thuong
-    cout << "\nChuoi sau khi chuyen thanh chu thuong: "
-         << vietThuong(task.name) << endl;
+    // Hien thi tat ca cong viec
+    cout << "===== DANH SACH CONG VIEC =====\n";
+
+    TaskNode* current = head;
+    while (current != nullptr) {
+        inTask(current);
+        current = current->next;
+    }
+
+    // Nhap ten cong viec can tim
+    string tenCanTim;
+
+    cout << "\nNhap ten cong viec can tim: ";
+    getline(cin, tenCanTim);
+
+    // Goi ham tim kiem
+    timTheoTen(head, tenCanTim);
+
+    // Giai phong bo nho
+    deleteAll(head);
 
     return 0;
 }
