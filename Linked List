@@ -51,6 +51,15 @@ tail=p;
 }
 size++
 }
-
+Node *Slist::timTheoMa(int x){
+Node *p= head;
+While(p !=NULL)[
+if(p->data==x){
+return p;
+}
+p=p->next;
+}
+return NULL;
+}
 
 
