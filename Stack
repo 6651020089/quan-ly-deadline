@@ -66,6 +66,37 @@ void NganXepLichSu::them(LichSu x){
 
     size++;
 }
+// Lấy phần tử trên cùng
+LichSu NganXepLichSu::layRa(){
+
+    LichSu rong;
+
+    rong.hanhDong = "";
+
+    rong.congViec.ma = -1;
+
+
+    if(top == NULL){
+
+        return rong;
+    }
+
+
+    NodeStack *p = top;
+
+    LichSu x = p->data;
+
+    top = top->next;
+
+    delete p;
+
+    size--;
+
+    return x;
+}
+
+
+
 
 
 
