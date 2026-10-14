@@ -112,3 +112,51 @@ void CayDeadline::duyetLNR(NutCay *p){
 
     duyetLNR(p->right);
 }
+// Duyệt NLR
+void CayDeadline::duyetNLR(NutCay *p){
+
+    if(p == NULL){
+
+        return;
+    }
+
+
+    cout << "\nMa: "
+         << p->data.ma;
+
+    cout << " | Ten: "
+         << p->data.ten;
+
+    cout << " | Han: "
+         << p->data.hanChot;
+
+
+    duyetNLR(p->left);
+
+    duyetNLR(p->right);
+}
+
+
+// Duyệt LRN
+void CayDeadline::duyetLRN(NutCay *p){
+
+    if(p == NULL){
+
+        return;
+    }
+
+
+    duyetLRN(p->left);
+
+    duyetLRN(p->right);
+
+
+    cout << "\nMa: "
+         << p->data.ma;
+
+    cout << " | Ten: "
+         << p->data.ten;
+
+    cout << " | Han: "
+         << p->data.hanChot;
+}
