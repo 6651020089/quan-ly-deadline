@@ -82,8 +82,27 @@ void HangDoiDeadLine::hienThi(){
 
         p = p->next;
     }
-
     cout << "\n";
 }
+void HangDoiDeadline::xoaHet(){
+
+    while(head != NULL){
+
+        NodeQueue *p = head;
+
+        head = head->next;
+
+        delete p;
+    }
+
+    tail = NULL;
+
+    size = 0;
+}
+int HangDoiDeadline::soLuong(){
+
+    return size;
+}
+
 
 
