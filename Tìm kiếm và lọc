@@ -6,50 +6,50 @@
 using namespace std;
 
 // Cau truc luu thong tin cong viec
-struct TaskNode {
-    string name;
-    string subject;
-    bool completed;
-    int priority;
-    TaskNode* next;
+struct CongViec {
+    string ten;
+    string mon;
+    bool hoanThanh;
+    int uuTien;
+    CongViec* tiepTheo;
 
-    TaskNode(string n, string s, bool c, int p) {
-        name = n;
-        subject = s;
-        completed = c;
-        priority = p;
-        next = nullptr;
+    CongViec(string t, string m, bool ht, int ut) {
+        ten = t;
+        mon = m;
+        hoanThanh = ht;
+        uuTien = ut;
+        tiepTheo = nullptr;
     }
 };
 
 // Ham chuyen chu hoa thanh chu thuong
-string vietThuong(string text) {
+string vietThuong(string vanBan) {
     transform(
-        text.begin(),
-        text.end(),
-        text.begin(),
-        [](unsigned char c) {
-            return static_cast<char>(tolower(c));
+        vanBan.begin(),
+        vanBan.end(),
+        vanBan.begin(),
+        [](unsigned char kyTu) {
+            return static_cast<char>(tolower(kyTu));
         }
     );
 
-    return text;
+    return vanBan;
 }
 
-// Ham in thong tin mot cong viec
-void inTask(TaskNode* task) {
-    if (task == nullptr) {
+// Ham in thong tin cong viec
+void inCongViec(CongViec* congViec) {
+    if (congViec == nullptr) {
         cout << "Cong viec khong ton tai!\n";
         return;
     }
 
     cout << "\n";
     cout << "----------------------------------------\n";
-    cout << "Ten cong viec : " << task->name << endl;
-    cout << "Mon / Chu de  : " << task->subject << endl;
+    cout << "Ten cong viec : " << congViec->ten << endl;
+    cout << "Mon / Chu de  : " << congViec->mon << endl;
 
     cout << "Trang thai    : ";
-    if (task->completed)
+    if (congViec->hoanThanh)
         cout << "Da hoan thanh";
     else
         cout << "Chua hoan thanh";
@@ -57,7 +57,7 @@ void inTask(TaskNode* task) {
     cout << endl;
     cout << "Do uu tien    : ";
 
-    switch (task->priority) {
+    switch (congViec->uuTien) {
         case 1:
             cout << "Thap";
             break;
@@ -76,88 +76,127 @@ void inTask(TaskNode* task) {
 }
 
 // Ham them cong viec vao danh sach lien ket
-void addTask(TaskNode*& head, string name,
-             string subject, bool completed, int priority) {
-    TaskNode* newTask =
-        new TaskNode(name, subject, completed, priority);
+void themCongViec(CongViec*& dau,
+                  string ten, string mon,
+                  bool hoanThanh, int uuTien) {
+    CongViec* congViecMoi =
+        new CongViec(ten, mon, hoanThanh, uuTien);
 
-    if (head == nullptr) {
-        head = newTask;
+    if (dau == nullptr) {
+        dau = congViecMoi;
         return;
     }
 
-    TaskNode* current = head;
+    CongViec* hienTai = dau;
 
-    while (current->next != nullptr) {
-        current = current->next;
+    while (hienTai->tiepTheo != nullptr) {
+        hienTai = hienTai->tiepTheo;
     }
 
-    current->next = newTask;
+    hienTai->tiepTheo = congViecMoi;
 }
 
-// Ham tim kiem cong viec theo ten
-void timTheoTen(TaskNode* head, string tenCanTim) {
-    bool found = false;
+// Ham tim cong viec theo ten
+void timTheoTen(CongViec* dau, string tenCanTim) {
+    bool timThay = false;
 
     tenCanTim = vietThuong(tenCanTim);
 
-    TaskNode* current = head;
+    CongViec* hienTai = dau;
 
-    while (current != nullptr) {
-        string tenCongViec = vietThuong(current->name);
+    while (hienTai != nullptr) {
+        string tenCongViec = vietThuong(hienTai->ten);
 
         if (tenCongViec.find(tenCanTim) != string::npos) {
-            inTask(current);
-            found = true;
+            inCongViec(hienTai);
+            timThay = true;
         }
 
-        current = current->next;
+        hienTai = hienTai->tiepTheo;
     }
 
-    if (!found) {
+    if (!timThay) {
         cout << "\nKhong tim thay cong viec co ten: "
              << tenCanTim << endl;
     }
 }
 
-// Ham giai phong bo nho danh sach lien ket
-void deleteAll(TaskNode*& head) {
-    while (head != nullptr) {
-        TaskNode* temp = head;
-        head = head->next;
-        delete temp;
+// Ham tim cong viec theo mon hoc / chu de
+void timTheoMon(CongViec* dau, string monCanTim) {
+    bool timThay = false;
+
+    monCanTim = vietThuong(monCanTim);
+
+    CongViec* hienTai = dau;
+
+    while (hienTai != nullptr) {
+        string monCongViec = vietThuong(hienTai->mon);
+
+        if (monCongViec.find(monCanTim) != string::npos) {
+            inCongViec(hienTai);
+            timThay = true;
+        }
+
+        hienTai = hienTai->tiepTheo;
+    }
+
+    if (!timThay) {
+        cout << "\nKhong tim thay cong viec thuoc mon: "
+             << monCanTim << endl;
+    }
+}
+
+// Ham giai phong bo nho
+void giaiPhongBoNho(CongViec*& dau) {
+    while (dau != nullptr) {
+        CongViec* tam = dau;
+        dau = dau->tiepTheo;
+        delete tam;
     }
 }
 
 // Ham main
 int main() {
-    // Tao danh sach cong viec
-    TaskNode* head = nullptr;
+    CongViec* dau = nullptr;
 
-    addTask(head, "Lam bai tap C++", "Lap trinh", false, 3);
-    addTask(head, "Lam bao cao", "CSDL", true, 2);
-    addTask(head, "On tap Linked List", "Lap trinh", false, 3);
+    // Them du lieu mau
+    themCongViec(dau, "Lam bai tap C++",
+                 "Lap trinh", false, 3);
 
-    // Hien thi tat ca cong viec
+    themCongViec(dau, "Lam bao cao",
+                 "CSDL", true, 2);
+
+    themCongViec(dau, "On tap Linked List",
+                 "Lap trinh", false, 3);
+
+    // Hien thi danh sach cong viec
     cout << "===== DANH SACH CONG VIEC =====\n";
 
-    TaskNode* current = head;
-    while (current != nullptr) {
-        inTask(current);
-        current = current->next;
+    CongViec* hienTai = dau;
+
+    while (hienTai != nullptr) {
+        inCongViec(hienTai);
+        hienTai = hienTai->tiepTheo;
     }
 
-    // Nhap ten cong viec can tim
+    // Tim kiem theo ten
     string tenCanTim;
 
     cout << "\nNhap ten cong viec can tim: ";
     getline(cin, tenCanTim);
 
-    // Goi ham tim kiem
-    timTheoTen(head, tenCanTim);
+    timTheoTen(dau, tenCanTim);
+
+    // Tim kiem theo mon hoc
+    string monCanTim;
+
+    cout << "\nNhap mon / chu de can tim: ";
+    getline(cin, monCanTim);
+
+    timTheoMon(dau, monCanTim);
 
     // Giai phong bo nho
-    deleteAll(head);
+    giaiPhongBoNho(dau);
 
     return 0;
 }
