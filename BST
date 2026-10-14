@@ -88,3 +88,27 @@ void CayDeadline::them(CongViec cv){
 
     root = themNode(root, cv);
 }
+// Duyệt LNR
+void CayDeadline::duyetLNR(NutCay *p){
+
+    if(p == NULL){
+
+        return;
+    }
+
+
+    duyetLNR(p->left);
+
+
+    cout << "\nMa: "
+         << p->data.ma;
+
+    cout << " | Ten: "
+         << p->data.ten;
+
+    cout << " | Han: "
+         << p->data.hanChot;
+
+
+    duyetLNR(p->right);
+}
