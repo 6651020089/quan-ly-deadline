@@ -146,6 +146,30 @@ void timTheoMon(CongViec* dau, string monCanTim) {
     }
 }
 
+// Ham loc cong viec theo trang thai
+void locTheoTrangThai(CongViec* dau, bool hoanThanh) {
+    bool timThay = false;
+
+    CongViec* hienTai = dau;
+
+    while (hienTai != nullptr) {
+        if (hienTai->hoanThanh == hoanThanh) {
+            inCongViec(hienTai);
+            timThay = true;
+        }
+
+        hienTai = hienTai->tiepTheo;
+    }
+
+    if (!timThay) {
+        if (hoanThanh) {
+            cout << "\nKhong co cong viec da hoan thanh.\n";
+        } else {
+            cout << "\nKhong co cong viec chua hoan thanh.\n";
+        }
+    }
+}
+
 // Ham giai phong bo nho
 void giaiPhongBoNho(CongViec*& dau) {
     while (dau != nullptr) {
@@ -194,6 +218,14 @@ int main() {
     getline(cin, monCanTim);
 
     timTheoMon(dau, monCanTim);
+
+    // Loc cong viec da hoan thanh
+    cout << "\n===== CONG VIEC DA HOAN THANH =====\n";
+    locTheoTrangThai(dau, true);
+
+    // Loc cong viec chua hoan thanh
+    cout << "\n===== CONG VIEC CHUA HOAN THANH =====\n";
+    locTheoTrangThai(dau, false);
 
     // Giai phong bo nho
     giaiPhongBoNho(dau);
