@@ -212,3 +212,39 @@ void CayDeadline::giamDan(){
 
     cout << "\n";
 }
+void CayDeadline::hienThi(){
+    if(root == NULL){
+        cout << "Cay dang rong!\n";
+        return;
+    }
+
+    cout << "\nDANH SACH CONG VIEC THEO DEADLINE TANG DAN:\n";
+    duyetLNR(root);
+}
+
+// Xóa cây
+void CayDeadline::xoaCay(NutCay *p){
+
+    if(p == NULL){
+
+        return;
+    }
+
+
+    xoaCay(p->left);
+
+    xoaCay(p->right);
+
+    delete p;
+}
+
+
+// Xóa toàn bộ cây
+void CayDeadline::xoaHet(){
+
+    xoaCay(root);
+
+    root = NULL;
+
+    size = 0;
+}
