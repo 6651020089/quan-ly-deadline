@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <string>
 #include <algorithm>
@@ -170,6 +171,27 @@ void locTheoTrangThai(CongViec* dau, bool hoanThanh) {
     }
 }
 
+// Ham loc cong viec theo do uu tien
+void locTheoUuTien(CongViec* dau, int uuTien) {
+    bool timThay = false;
+
+    CongViec* hienTai = dau;
+
+    while (hienTai != nullptr) {
+        if (hienTai->uuTien == uuTien) {
+            inCongViec(hienTai);
+            timThay = true;
+        }
+
+        hienTai = hienTai->tiepTheo;
+    }
+
+    if (!timThay) {
+        cout << "\nKhong co cong viec voi muc uu tien "
+             << uuTien << ".\n";
+    }
+}
+
 // Ham giai phong bo nho
 void giaiPhongBoNho(CongViec*& dau) {
     while (dau != nullptr) {
@@ -226,6 +248,18 @@ int main() {
     // Loc cong viec chua hoan thanh
     cout << "\n===== CONG VIEC CHUA HOAN THANH =====\n";
     locTheoTrangThai(dau, false);
+
+    // Loc cong viec uu tien cao
+    cout << "\n===== CONG VIEC UU TIEN CAO =====\n";
+    locTheoUuTien(dau, 3);
+
+    // Loc cong viec uu tien trung binh
+    cout << "\n===== CONG VIEC UU TIEN TRUNG BINH =====\n";
+    locTheoUuTien(dau, 2);
+
+    // Loc cong viec uu tien thap
+    cout << "\n===== CONG VIEC UU TIEN THAP =====\n";
+    locTheoUuTien(dau, 1);
 
     // Giai phong bo nho
     giaiPhongBoNho(dau);
