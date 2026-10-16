@@ -90,6 +90,45 @@ bool Slist::xoaTheoMa(int x){
         }
         p = p->next;
     }
+void Slist::hienThi(){
+    if(head == NULL){
+        cout << "\nDanh sach rong!\n";
+        return;
+    }
+    Node *p = head;
+    cout << "\n========== DANH SACH CONG VIEC ==========\n";
+    while(p != NULL){
+        int ma = p->data;
+        for(int i = 0; i < soLuongCongViec; i++){
+            if(danhSachCongViec[i].ma == ma){
+                cout << "\nMa: "
+                     << danhSachCongViec[i].ma;
+                cout << "\nTen: "
+                     << danhSachCongViec[i].ten;
+                cout << "\nMon hoc: "
+                     << danhSachCongViec[i].monHoc;
+                cout << "\nHan chot: "
+                     << danhSachCongViec[i].hanChot;
+
+                cout << "\nDo uu tien: "
+                     << danhSachCongViec[i].doUuTien;
+
+                cout << "\nTrang thai: ";
+
+                if(danhSachCongViec[i].daHoanThanh){
+                    cout << "Da hoan thanh";
+                }
+                else{
+                    cout << "Chua hoan thanh";
+                }
+                cout << "\n------------------------------------------";
+                break;
+            }
+        }
+        p = p->next;
+    }
+    cout << "\n";
+}
     return false;
 }
 
