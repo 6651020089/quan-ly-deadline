@@ -61,5 +61,36 @@ p=p->next;
 }
 return NULL;
 }
+bool Slist::xoaTheoMa(int x){
+
+    if(head == NULL){
+        return false;
+    }
+    if(head->data == x){
+        Node *p = head;
+        head = head->next;
+        delete p;
+        size--;
+        if(head == NULL){
+            tail = NULL;
+        }
+        return true;
+    }
+    Node *p = head;
+    while(p->next != NULL){
+        if(p->next->data == x){
+            Node *q = p->next;
+            p->next = q->next;
+            if(q == tail){
+                tail = p;
+            }
+            delete q;
+            size--;
+            return true;
+        }
+        p = p->next;
+    }
+    return false;
+}
 
 
