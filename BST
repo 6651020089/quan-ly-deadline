@@ -160,3 +160,55 @@ void CayDeadline::duyetLRN(NutCay *p){
     cout << " | Han: "
          << p->data.hanChot;
 }
+// Deadline tăng dần
+void CayDeadline::tangDan(){
+
+    cout << "\n========== DEADLINE TANG DAN ==========\n";
+
+    duyetLNR(root);
+
+    cout << "\n";
+}
+
+
+// Deadline giảm dần
+void CayDeadline::giamDan(){
+
+    cout << "\n========== DEADLINE GIAM DAN ==========\n";
+
+    // RNL
+    stack<NutCay*> nganXep;
+
+    NutCay *p = root;
+
+
+    while(p != NULL || !nganXep.empty()){
+
+        while(p != NULL){
+
+            nganXep.push(p);
+
+            p = p->right;
+        }
+
+
+        p = nganXep.top();
+
+        nganXep.pop();
+
+
+        cout << "\nMa: "
+             << p->data.ma;
+
+        cout << " | Ten: "
+             << p->data.ten;
+
+        cout << " | Han: "
+             << p->data.hanChot;
+
+
+        p = p->left;
+    }
+
+    cout << "\n";
+}
