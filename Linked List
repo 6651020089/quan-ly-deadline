@@ -27,6 +27,7 @@ p->data=x;
 p->next=NULL;
 return p;
 }
+
 void Slist::themDau(int x){
 Node *p =createNode(x);
 if(head ==NULL){
@@ -131,5 +132,33 @@ void Slist::hienThi(){
 }
     return false;
 }
+int Slist::soLuong(){
+    return size;
+}
 
+int timViTriCongViec(int ma){
+
+    for(int i = 0; i < soLuongCongViec; i++){
+
+        if(danhSachCongViec[i].ma == ma){
+
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+bool xoaCongViecTrongMang(int ma){
+    int viTri = timViTriCongViec(ma);
+    if(viTri == -1){
+        return false;
+    }
+    for(int i = viTri; i < soLuongCongViec - 1; i++){
+        danhSachCongViec[i] =
+        danhSachCongViec[i + 1];
+    }
+    soLuongCongViec--;
+    return true;
+}
 
