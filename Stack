@@ -94,6 +94,43 @@ LichSu NganXepLichSu::layRa(){
 
     return x;
 }
+// Hiển thị Stack
+void NganXepLichSu::hienThi(){
+
+    if(top == NULL){
+
+        cout << "\nLich su rong!\n";
+
+        return;
+    }
+
+
+    NodeStack *p = top;
+
+    cout << "\n========== LICH SU ==========\n";
+
+
+    while(p != NULL){
+
+        cout << "\nHanh dong: "
+             << p->data.hanhDong;
+
+        cout << "\nMa cong viec: "
+             << p->data.congViec.ma;
+
+        cout << "\nTen: "
+             << p->data.congViec.ten;
+
+        cout << "\n------------------------------";
+
+        p = p->next;
+    }
+
+    cout << "\n";
+}
+
+
+
 
 
 
