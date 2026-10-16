@@ -128,6 +128,29 @@ void NganXepLichSu::hienThi(){
 
     cout << "\n";
 }
+// Xóa Stack
+void NganXepLichSu::xoaHet(){
+
+    while(top != NULL){
+
+        NodeStack *p = top;
+
+        top = top->next;
+
+        delete p;
+    }
+
+    size = 0;
+}
+
+
+// Số lượng
+int NganXepLichSu::soLuong(){
+
+    return size;
+}
+
+
 
 
 
