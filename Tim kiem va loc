@@ -8,3 +8,36 @@ string vietThuong(string s){
 
     return s;
 }
+
+// In công việc
+void inTask(CongViec cv){
+
+    cout << "\nMa: "
+         << cv.ma;
+
+    cout << "\nTen: "
+         << cv.ten;
+
+    cout << "\nMon hoc: "
+         << cv.monHoc;
+
+    cout << "\nHan chot: "
+         << cv.hanChot;
+
+    cout << "\nDo uu tien: "
+         << cv.doUuTien;
+
+    cout << "\nTrang thai: ";
+
+
+    if(cv.daHoanThanh){
+
+        cout << "Da hoan thanh";
+    }
+    else{
+
+        cout << "Chua hoan thanh";
+    }
+
+    cout << "\n--------------------------------------";
+}
