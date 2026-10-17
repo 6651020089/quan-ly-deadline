@@ -143,3 +143,53 @@ void timTheoMon(
         cout << "\nKhong tim thay!\n";
     }
 }
+
+// ======================================================
+// 8. HÀM LỌC
+// ======================================================
+
+// Lọc theo trạng thái
+void locTheoTrangThai(
+    Slist &danhSach,
+    bool trangThai
+){
+
+    Node *p = danhSach.head;
+
+    bool timThay = false;
+
+
+    while(p != NULL){
+
+        int ma = p->data;
+
+        int viTri =
+        timViTriCongViec(ma);
+
+
+        if(viTri != -1){
+
+            if(
+                danhSachCongViec[viTri]
+                .daHoanThanh
+                == trangThai
+            ){
+
+                inTask(
+                    danhSachCongViec[viTri]
+                );
+
+                timThay = true;
+            }
+        }
+
+
+        p = p->next;
+    }
+
+
+    if(!timThay){
+
+        cout << "\nKhong co cong viec phu hop!\n";
+    }
+}
