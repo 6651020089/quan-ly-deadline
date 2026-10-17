@@ -92,3 +92,54 @@ void timTheoTen(
         cout << "\nKhong tim thay!\n";
     }
 }
+// Tìm theo môn
+void timTheoMon(
+    Slist &danhSach,
+    string mon
+){
+
+    Node *p = danhSach.head;
+
+    bool timThay = false;
+
+    mon = vietThuong(mon);
+
+
+    while(p != NULL){
+
+        int ma = p->data;
+
+        int viTri = timViTriCongViec(ma);
+
+
+        if(viTri != -1){
+
+            string tenMon =
+            vietThuong(
+                danhSachCongViec[viTri].monHoc
+            );
+
+
+            if(
+                tenMon.find(mon)
+                != string::npos
+            ){
+
+                inTask(
+                    danhSachCongViec[viTri]
+                );
+
+                timThay = true;
+            }
+        }
+
+
+        p = p->next;
+    }
+
+
+    if(!timThay){
+
+        cout << "\nKhong tim thay!\n";
+    }
+}
