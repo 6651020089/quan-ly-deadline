@@ -41,3 +41,54 @@ void inTask(CongViec cv){
 
     cout << "\n--------------------------------------";
 }
+// Tìm theo tên
+void timTheoTen(
+    Slist &danhSach,
+    string tuKhoa
+){
+
+    Node *p = danhSach.head;
+
+    bool timThay = false;
+
+    tuKhoa = vietThuong(tuKhoa);
+
+
+    while(p != NULL){
+
+        int ma = p->data;
+
+        int viTri = timViTriCongViec(ma);
+
+
+        if(viTri != -1){
+
+            string ten =
+            vietThuong(
+                danhSachCongViec[viTri].ten
+            );
+
+
+            if(
+                ten.find(tuKhoa)
+                != string::npos
+            ){
+
+                inTask(
+                    danhSachCongViec[viTri]
+                );
+
+                timThay = true;
+            }
+        }
+
+
+        p = p->next;
+    }
+
+
+    if(!timThay){
+
+        cout << "\nKhong tim thay!\n";
+    }
+}
