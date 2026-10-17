@@ -1,8 +1,8 @@
-
 #include <iostream>
 #include <string>
 #include <algorithm>
 #include <cctype>
+#include <iomanip>
 
 using namespace std;
 
@@ -192,6 +192,108 @@ void locTheoUuTien(CongViec* dau, int uuTien) {
     }
 }
 
+// =============================================
+// CAC HAM THONG KE
+// =============================================
+
+// Ham dem cong viec da hoan thanh
+int demHoanThanh(CongViec* dau) {
+    int dem = 0;
+    CongViec* hienTai = dau;
+
+    while (hienTai != nullptr) {
+        if (hienTai->hoanThanh) {
+            dem++;
+        }
+
+        hienTai = hienTai->tiepTheo;
+    }
+
+    return dem;
+}
+
+// Ham dem cong viec chua hoan thanh
+int demChuaHoanThanh(CongViec* dau) {
+    int dem = 0;
+    CongViec* hienTai = dau;
+
+    while (hienTai != nullptr) {
+        if (!hienTai->hoanThanh) {
+            dem++;
+        }
+
+        hienTai = hienTai->tiepTheo;
+    }
+
+    return dem;
+}
+
+// Ham dem cong viec theo do uu tien
+int demTheoUuTien(CongViec* dau, int uuTien) {
+    int dem = 0;
+    CongViec* hienTai = dau;
+
+    while (hienTai != nullptr) {
+        if (hienTai->uuTien == uuTien) {
+            dem++;
+        }
+
+        hienTai = hienTai->tiepTheo;
+    }
+
+    return dem;
+}
+
+// Ham hien thi thong ke cong viec
+void thongKe(CongViec* dau) {
+    int daHoanThanh = demHoanThanh(dau);
+    int chuaHoanThanh = demChuaHoanThanh(dau);
+
+    int uuTienThap = demTheoUuTien(dau, 1);
+    int uuTienTrungBinh = demTheoUuTien(dau, 2);
+    int uuTienCao = demTheoUuTien(dau, 3);
+
+    int tongCongViec = daHoanThanh + chuaHoanThanh;
+
+    double tienDo = 0.0;
+
+    if (tongCongViec > 0) {
+        tienDo = static_cast<double>(daHoanThanh)
+                 / tongCongViec * 100;
+    }
+
+    cout << "\n";
+    cout << "========================================\n";
+    cout << "          THONG KE CONG VIEC\n";
+    cout << "========================================\n";
+
+    cout << left;
+
+    cout << setw(23) << "Tong cong viec"
+         << ": " << tongCongViec << endl;
+
+    cout << setw(23) << "Da hoan thanh"
+         << ": " << daHoanThanh << endl;
+
+    cout << setw(23) << "Chua hoan thanh"
+         << ": " << chuaHoanThanh << endl;
+
+    cout << setw(23) << "Uu tien thap"
+         << ": " << uuTienThap << endl;
+
+    cout << setw(23) << "Uu tien trung binh"
+         << ": " << uuTienTrungBinh << endl;
+
+    cout << setw(23) << "Uu tien cao"
+         << ": " << uuTienCao << endl;
+
+    cout << setw(23) << "Tien do hoan thanh"
+         << ": " << fixed << setprecision(1)
+         << tienDo << "%" << endl;
+
+    cout << "========================================\n";
+}
+
 // Ham giai phong bo nho
 void giaiPhongBoNho(CongViec*& dau) {
     while (dau != nullptr) {
@@ -260,6 +362,9 @@ int main() {
     // Loc cong viec uu tien thap
     cout << "\n===== CONG VIEC UU TIEN THAP =====\n";
     locTheoUuTien(dau, 1);
+
+    // Thong ke cong viec
+    thongKe(dau);
 
     // Giai phong bo nho
     giaiPhongBoNho(dau);
