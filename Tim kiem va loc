@@ -239,3 +239,146 @@ void locTheoUuTien(
         cout << "\nKhong co cong viec phu hop!\n";
     }
 }
+
+// ======================================================
+// 9. THỐNG KÊ
+// ======================================================
+
+int demDaHoanThanh(Slist &danhSach){
+
+    int dem = 0;
+
+    Node *p = danhSach.head;
+
+
+    while(p != NULL){
+
+        int viTri =
+        timViTriCongViec(p->data);
+
+
+        if(viTri != -1){
+
+            if(
+                danhSachCongViec[viTri]
+                .daHoanThanh
+            ){
+
+                dem++;
+            }
+        }
+
+
+        p = p->next;
+    }
+
+
+    return dem;
+}
+
+
+int demChuaHoanThanh(Slist &danhSach){
+
+    int dem = 0;
+
+    Node *p = danhSach.head;
+
+
+    while(p != NULL){
+
+        int viTri =
+        timViTriCongViec(p->data);
+
+
+        if(viTri != -1){
+
+            if(
+                !danhSachCongViec[viTri]
+                .daHoanThanh
+            ){
+
+                dem++;
+            }
+        }
+
+
+        p = p->next;
+    }
+
+
+    return dem;
+}
+
+
+int demTheoUuTien(
+    Slist &danhSach,
+    int muc
+){
+
+    int dem = 0;
+
+    Node *p = danhSach.head;
+
+
+    while(p != NULL){
+
+        int viTri =
+        timViTriCongViec(p->data);
+
+
+        if(viTri != -1){
+
+            if(
+                danhSachCongViec[viTri]
+                .doUuTien
+                == muc
+            ){
+
+                dem++;
+            }
+        }
+
+
+        p = p->next;
+    }
+
+
+    return dem;
+}
+
+
+// Thống kê
+void thongKe(Slist &danhSach){
+
+    cout << "\n========== THONG KE ==========\n";
+
+
+    cout << "\nTong so cong viec: "
+         << danhSach.soLuong();
+
+
+    cout << "\nDa hoan thanh: "
+         << demDaHoanThanh(danhSach);
+
+
+    cout << "\nChua hoan thanh: "
+         << demChuaHoanThanh(danhSach);
+
+
+    cout << "\n\nTheo do uu tien:";
+
+
+    for(int i = 1; i <= 5; i++){
+
+        cout << "\nUu tien "
+             << i
+             << ": "
+             << demTheoUuTien(
+                    danhSach,
+                    i
+                );
+    }
+
+
+    cout << "\n";
+}
