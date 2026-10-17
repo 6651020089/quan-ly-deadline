@@ -368,7 +368,7 @@ void thongKe(Slist &danhSach){
     cout << "\n\nTheo do uu tien:";
 
 
-    for(int i = 1; i <= 5; i++){
+    for(int i = 1; i <= 3; i++){
 
         cout << "\nUu tien "
              << i
