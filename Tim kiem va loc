@@ -1,554 +1,396 @@
-#include <iostream>
-#include <string>
-#include <algorithm>
-#include <cctype>
-#include <iomanip>
-#include <sstream>
+// 7. CÁC HÀM TÌM KIẾM
 
-using namespace std;
+// Chuyển chữ thường
+string vietThuong(string s){
 
-// ============================================================
-// 1. CAU TRUC CONG VIEC
-// ============================================================
+    for(int i = 0; i < s.length(); i++){
 
-struct CongViec {
-    string ten;
-    string mon;
-    bool hoanThanh;
-    int uuTien;
-    CongViec* tiepTheo;
-
-    CongViec(string t, string m, bool ht, int ut) {
-        ten = t;
-        mon = m;
-        hoanThanh = ht;
-        uuTien = ut;
-        tiepTheo = nullptr;
+        s[i] = tolower(s[i]);
     }
-};
 
-// ============================================================
-// 2. HAM NHAP SO NGUYEN AN TOAN
-// ============================================================
-
-int nhapSoNguyen(string thongBao) {
-    string dong;
-    int giaTri;
-    char kyTuThua;
-
-    while (true) {
-        cout << thongBao;
-        getline(cin, dong);
-
-        stringstream ss(dong);
-
-        if (ss >> giaTri && !(ss >> kyTuThua)) {
-            return giaTri;
-        }
-
-        cout << "Du lieu khong hop le! Vui long nhap so nguyen.\n";
-    }
+    return s;
 }
 
-// ============================================================
-// 3. HAM CHUYEN CHU HOA THANH CHU THUONG
-// ============================================================
 
-string vietThuong(string vanBan) {
-    transform(
-        vanBan.begin(),
-        vanBan.end(),
-        vanBan.begin(),
-        [](unsigned char kyTu) {
-            return static_cast<char>(tolower(kyTu));
-        }
-    );
+// In công việc
+void inTask(CongViec cv){
 
-    return vanBan;
-}
+    cout << "\nMa: "
+         << cv.ma;
 
-// ============================================================
-// 4. HAM IN THONG TIN CONG VIEC
-// ============================================================
+    cout << "\nTen: "
+         << cv.ten;
 
-void inCongViec(CongViec* congViec) {
-    if (congViec == nullptr) {
-        cout << "Cong viec khong ton tai!\n";
-        return;
-    }
+    cout << "\nMon hoc: "
+         << cv.monHoc;
 
-    cout << "\n";
-    cout << "----------------------------------------\n";
-    cout << "Ten cong viec : " << congViec->ten << endl;
-    cout << "Mon / Chu de  : " << congViec->mon << endl;
+    cout << "\nHan chot: "
+         << cv.hanChot;
 
-    cout << "Trang thai    : ";
-    if (congViec->hoanThanh)
+    cout << "\nDo uu tien: "
+         << cv.doUuTien;
+
+    cout << "\nTrang thai: ";
+
+
+    if(cv.daHoanThanh){
+
         cout << "Da hoan thanh";
-    else
+    }
+    else{
+
         cout << "Chua hoan thanh";
-
-    cout << endl;
-    cout << "Do uu tien    : ";
-
-    switch (congViec->uuTien) {
-        case 1:
-            cout << "Thap";
-            break;
-        case 2:
-            cout << "Trung binh";
-            break;
-        case 3:
-            cout << "Cao";
-            break;
-        default:
-            cout << "Khong xac dinh";
     }
 
-    cout << endl;
-    cout << "----------------------------------------\n";
+    cout << "\n--------------------------------------";
 }
 
-// ============================================================
-// 5. HAM THEM CONG VIEC
-// ============================================================
 
-void themCongViec(
-    CongViec*& dau,
-    string ten,
-    string mon,
-    bool hoanThanh,
-    int uuTien
-) {
-    if (uuTien < 1 || uuTien > 3) {
-        cout << "Do uu tien khong hop le!\n";
-        return;
-    }
+// Tìm theo tên
+void timTheoTen(
+    Slist &danhSach,
+    string tuKhoa
+){
 
-    CongViec* congViecMoi =
-        new CongViec(ten, mon, hoanThanh, uuTien);
+    Node *p = danhSach.head;
 
-    if (dau == nullptr) {
-        dau = congViecMoi;
-        return;
-    }
-
-    CongViec* hienTai = dau;
-
-    while (hienTai->tiepTheo != nullptr) {
-        hienTai = hienTai->tiepTheo;
-    }
-
-    hienTai->tiepTheo = congViecMoi;
-}
-
-// ============================================================
-// 6. HAM HIEN THI TAT CA CONG VIEC
-// ============================================================
-
-void hienThiDanhSach(CongViec* dau) {
-    if (dau == nullptr) {
-        cout << "\nDanh sach cong viec rong.\n";
-        return;
-    }
-
-    cout << "\n========== DANH SACH CONG VIEC ==========\n";
-
-    CongViec* hienTai = dau;
-
-    while (hienTai != nullptr) {
-        inCongViec(hienTai);
-        hienTai = hienTai->tiepTheo;
-    }
-}
-
-// ============================================================
-// 7. TIM CONG VIEC THEO TEN
-// ============================================================
-
-void timTheoTen(CongViec* dau, string tenCanTim) {
     bool timThay = false;
-    tenCanTim = vietThuong(tenCanTim);
 
-    CongViec* hienTai = dau;
+    tuKhoa = vietThuong(tuKhoa);
 
-    while (hienTai != nullptr) {
-        string tenCongViec = vietThuong(hienTai->ten);
 
-        if (tenCongViec.find(tenCanTim) != string::npos) {
-            inCongViec(hienTai);
-            timThay = true;
+    while(p != NULL){
+
+        int ma = p->data;
+
+        int viTri = timViTriCongViec(ma);
+
+
+        if(viTri != -1){
+
+            string ten =
+            vietThuong(
+                danhSachCongViec[viTri].ten
+            );
+
+
+            if(
+                ten.find(tuKhoa)
+                != string::npos
+            ){
+
+                inTask(
+                    danhSachCongViec[viTri]
+                );
+
+                timThay = true;
+            }
         }
 
-        hienTai = hienTai->tiepTheo;
+
+        p = p->next;
     }
 
-    if (!timThay) {
-        cout << "\nKhong tim thay cong viec co ten: "
-             << tenCanTim << endl;
+
+    if(!timThay){
+
+        cout << "\nKhong tim thay!\n";
     }
 }
 
-// ============================================================
-// 8. TIM CONG VIEC THEO MON / CHU DE
-// ============================================================
 
-void timTheoMon(CongViec* dau, string monCanTim) {
+// Tìm theo môn
+void timTheoMon(
+    Slist &danhSach,
+    string mon
+){
+
+    Node *p = danhSach.head;
+
     bool timThay = false;
-    monCanTim = vietThuong(monCanTim);
 
-    CongViec* hienTai = dau;
+    mon = vietThuong(mon);
 
-    while (hienTai != nullptr) {
-        string monCongViec = vietThuong(hienTai->mon);
 
-        if (monCongViec.find(monCanTim) != string::npos) {
-            inCongViec(hienTai);
-            timThay = true;
+    while(p != NULL){
+
+        int ma = p->data;
+
+        int viTri = timViTriCongViec(ma);
+
+
+        if(viTri != -1){
+
+            string tenMon =
+            vietThuong(
+                danhSachCongViec[viTri].monHoc
+            );
+
+
+            if(
+                tenMon.find(mon)
+                != string::npos
+            ){
+
+                inTask(
+                    danhSachCongViec[viTri]
+                );
+
+                timThay = true;
+            }
         }
 
-        hienTai = hienTai->tiepTheo;
+
+        p = p->next;
     }
 
-    if (!timThay) {
-        cout << "\nKhong tim thay cong viec thuoc mon: "
-             << monCanTim << endl;
+
+    if(!timThay){
+
+        cout << "\nKhong tim thay!\n";
     }
 }
 
-// ============================================================
-// 9. LOC CONG VIEC THEO TRANG THAI
-// ============================================================
 
-void locTheoTrangThai(CongViec* dau, bool hoanThanh) {
+
+// ======================================================
+// 8. HÀM LỌC
+// ======================================================
+
+// Lọc theo trạng thái
+void locTheoTrangThai(
+    Slist &danhSach,
+    bool trangThai
+){
+
+    Node *p = danhSach.head;
+
     bool timThay = false;
-    CongViec* hienTai = dau;
 
-    while (hienTai != nullptr) {
-        if (hienTai->hoanThanh == hoanThanh) {
-            inCongViec(hienTai);
-            timThay = true;
+
+    while(p != NULL){
+
+        int ma = p->data;
+
+        int viTri =
+        timViTriCongViec(ma);
+
+
+        if(viTri != -1){
+
+            if(
+                danhSachCongViec[viTri]
+                .daHoanThanh
+                == trangThai
+            ){
+
+                inTask(
+                    danhSachCongViec[viTri]
+                );
+
+                timThay = true;
+            }
         }
 
-        hienTai = hienTai->tiepTheo;
+
+        p = p->next;
     }
 
-    if (!timThay) {
-        if (hoanThanh)
-            cout << "\nKhong co cong viec da hoan thanh.\n";
-        else
-            cout << "\nKhong co cong viec chua hoan thanh.\n";
+
+    if(!timThay){
+
+        cout << "\nKhong co cong viec phu hop!\n";
     }
 }
 
-// ============================================================
-// 10. LOC CONG VIEC THEO DO UU TIEN
-// ============================================================
 
-void locTheoUuTien(CongViec* dau, int uuTien) {
+// Lọc theo ưu tiên
+void locTheoUuTien(
+    Slist &danhSach,
+    int muc
+){
+
+    Node *p = danhSach.head;
+
     bool timThay = false;
-    CongViec* hienTai = dau;
 
-    while (hienTai != nullptr) {
-        if (hienTai->uuTien == uuTien) {
-            inCongViec(hienTai);
-            timThay = true;
+
+    while(p != NULL){
+
+        int ma = p->data;
+
+        int viTri =
+        timViTriCongViec(ma);
+
+
+        if(viTri != -1){
+
+            if(
+                danhSachCongViec[viTri]
+                .doUuTien
+                == muc
+            ){
+
+                inTask(
+                    danhSachCongViec[viTri]
+                );
+
+                timThay = true;
+            }
         }
 
-        hienTai = hienTai->tiepTheo;
+
+        p = p->next;
     }
 
-    if (!timThay) {
-        cout << "\nKhong co cong viec voi muc uu tien "
-             << uuTien << ".\n";
+
+    if(!timThay){
+
+        cout << "\nKhong co cong viec phu hop!\n";
     }
 }
 
-// ============================================================
-// 11. CAC HAM THONG KE
-// ============================================================
 
-int demHoanThanh(CongViec* dau) {
+
+// ======================================================
+// 9. THỐNG KÊ
+// ======================================================
+
+int demDaHoanThanh(Slist &danhSach){
+
     int dem = 0;
-    CongViec* hienTai = dau;
 
-    while (hienTai != nullptr) {
-        if (hienTai->hoanThanh)
-            dem++;
+    Node *p = danhSach.head;
 
-        hienTai = hienTai->tiepTheo;
+
+    while(p != NULL){
+
+        int viTri =
+        timViTriCongViec(p->data);
+
+
+        if(viTri != -1){
+
+            if(
+                danhSachCongViec[viTri]
+                .daHoanThanh
+            ){
+
+                dem++;
+            }
+        }
+
+
+        p = p->next;
     }
+
 
     return dem;
 }
 
-int demChuaHoanThanh(CongViec* dau) {
+
+int demChuaHoanThanh(Slist &danhSach){
+
     int dem = 0;
-    CongViec* hienTai = dau;
 
-    while (hienTai != nullptr) {
-        if (!hienTai->hoanThanh)
-            dem++;
+    Node *p = danhSach.head;
 
-        hienTai = hienTai->tiepTheo;
+
+    while(p != NULL){
+
+        int viTri =
+        timViTriCongViec(p->data);
+
+
+        if(viTri != -1){
+
+            if(
+                !danhSachCongViec[viTri]
+                .daHoanThanh
+            ){
+
+                dem++;
+            }
+        }
+
+
+        p = p->next;
     }
+
 
     return dem;
 }
 
-int demTheoUuTien(CongViec* dau, int uuTien) {
+
+int demTheoUuTien(
+    Slist &danhSach,
+    int muc
+){
+
     int dem = 0;
-    CongViec* hienTai = dau;
 
-    while (hienTai != nullptr) {
-        if (hienTai->uuTien == uuTien)
-            dem++;
+    Node *p = danhSach.head;
 
-        hienTai = hienTai->tiepTheo;
+
+    while(p != NULL){
+
+        int viTri =
+        timViTriCongViec(p->data);
+
+
+        if(viTri != -1){
+
+            if(
+                danhSachCongViec[viTri]
+                .doUuTien
+                == muc
+            ){
+
+                dem++;
+            }
+        }
+
+
+        p = p->next;
     }
+
 
     return dem;
 }
 
-// ============================================================
-// 12. HIEN THI THONG KE
-// ============================================================
 
-void thongKe(CongViec* dau) {
-    int daHoanThanh = demHoanThanh(dau);
-    int chuaHoanThanh = demChuaHoanThanh(dau);
+// Thống kê
+void thongKe(Slist &danhSach){
 
-    int uuTienThap = demTheoUuTien(dau, 1);
-    int uuTienTrungBinh = demTheoUuTien(dau, 2);
-    int uuTienCao = demTheoUuTien(dau, 3);
+    cout << "\n========== THONG KE ==========\n";
 
-    int tongCongViec = daHoanThanh + chuaHoanThanh;
 
-    double tienDo = 0.0;
+    cout << "\nTong so cong viec: "
+         << danhSach.soLuong();
 
-    if (tongCongViec > 0) {
-        tienDo = static_cast<double>(daHoanThanh)
-                 / tongCongViec * 100;
+
+    cout << "\nDa hoan thanh: "
+         << demDaHoanThanh(danhSach);
+
+
+    cout << "\nChua hoan thanh: "
+         << demChuaHoanThanh(danhSach);
+
+
+    cout << "\n\nTheo do uu tien:";
+
+
+    for(int i = 1; i <= 5; i++){
+
+        cout << "\nUu tien "
+             << i
+             << ": "
+             << demTheoUuTien(
+                    danhSach,
+                    i
+                );
     }
+
 
     cout << "\n";
-    cout << "============================================\n";
-    cout << "             THONG KE CONG VIEC\n";
-    cout << "============================================\n";
-
-    cout << left;
-
-    cout << setw(25) << "Tong cong viec"
-         << ": " << tongCongViec << endl;
-
-    cout << setw(25) << "Da hoan thanh"
-         << ": " << daHoanThanh << endl;
-
-    cout << setw(25) << "Chua hoan thanh"
-         << ": " << chuaHoanThanh << endl;
-
-    cout << setw(25) << "Uu tien thap"
-         << ": " << uuTienThap << endl;
-
-    cout << setw(25) << "Uu tien trung binh"
-         << ": " << uuTienTrungBinh << endl;
-
-    cout << setw(25) << "Uu tien cao"
-         << ": " << uuTienCao << endl;
-
-    cout << setw(25) << "Tien do hoan thanh"
-         << ": " << fixed << setprecision(1)
-         << tienDo << "%" << endl;
-
-    cout << "============================================\n";
-}
-
-// ============================================================
-// 13. MENU TIM KIEM VA LOC
-// ============================================================
-
-void menuTimKiem(CongViec* dau) {
-    int luaChon;
-
-    do {
-        cout << "\n";
-        cout << "============================================\n";
-        cout << "              TIM KIEM VA LOC\n";
-        cout << "============================================\n";
-        cout << "1. Tim theo ten\n";
-        cout << "2. Tim theo mon / chu de\n";
-        cout << "3. Loc da hoan thanh\n";
-        cout << "4. Loc chua hoan thanh\n";
-        cout << "5. Loc uu tien cao\n";
-        cout << "6. Loc uu tien trung binh\n";
-        cout << "7. Loc uu tien thap\n";
-        cout << "0. Quay lai menu chinh\n";
-        cout << "============================================\n";
-
-        luaChon = nhapSoNguyen("Nhap lua chon: ");
-
-        switch (luaChon) {
-            case 1: {
-                string tenCanTim;
-                cout << "Nhap ten cong viec can tim: ";
-                getline(cin, tenCanTim);
-                timTheoTen(dau, tenCanTim);
-                break;
-            }
-
-            case 2: {
-                string monCanTim;
-                cout << "Nhap mon / chu de can tim: ";
-                getline(cin, monCanTim);
-                timTheoMon(dau, monCanTim);
-                break;
-            }
-
-            case 3:
-                cout << "\n===== DA HOAN THANH =====\n";
-                locTheoTrangThai(dau, true);
-                break;
-
-            case 4:
-                cout << "\n===== CHUA HOAN THANH =====\n";
-                locTheoTrangThai(dau, false);
-                break;
-
-            case 5:
-                cout << "\n===== UU TIEN CAO =====\n";
-                locTheoUuTien(dau, 3);
-                break;
-
-            case 6:
-                cout << "\n===== UU TIEN TRUNG BINH =====\n";
-                locTheoUuTien(dau, 2);
-                break;
-
-            case 7:
-                cout << "\n===== UU TIEN THAP =====\n";
-                locTheoUuTien(dau, 1);
-                break;
-
-            case 0:
-                break;
-
-            default:
-                cout << "Lua chon khong hop le!\n";
-        }
-
-    } while (luaChon != 0);
-}
-
-// ============================================================
-// 14. MENU CHINH
-// ============================================================
-
-void menuChinh(CongViec* dau) {
-    int luaChon;
-
-    do {
-        cout << "\n\n";
-        cout << "============================================\n";
-        cout << "              DEADLINE MANAGER\n";
-        cout << "============================================\n";
-        cout << "1. Xem tat ca cong viec\n";
-        cout << "2. Tim kiem va loc cong viec\n";
-        cout << "3. Xem thong ke\n";
-        cout << "0. Thoat chuong trinh\n";
-        cout << "============================================\n";
-
-        luaChon = nhapSoNguyen("Nhap lua chon: ");
-
-        switch (luaChon) {
-            case 1:
-                hienThiDanhSach(dau);
-                break;
-
-            case 2:
-                menuTimKiem(dau);
-                break;
-
-            case 3:
-                thongKe(dau);
-                break;
-
-            case 0:
-                cout << "\nDa thoat chuong trinh.\n";
-                break;
-
-            default:
-                cout << "Lua chon khong hop le!\n";
-        }
-
-    } while (luaChon != 0);
-}
-
-// ============================================================
-// 15. GIAI PHONG BO NHO
-// ============================================================
-
-void giaiPhongBoNho(CongViec*& dau) {
-    while (dau != nullptr) {
-        CongViec* tam = dau;
-        dau = dau->tiepTheo;
-        delete tam;
-    }
-}
-
-// ============================================================
-// 16. HAM MAIN
-// ============================================================
-
-int main() {
-    CongViec* dau = nullptr;
-
-    // Du lieu mau: 8 cong viec
-
-    themCongViec(
-        dau, "Lam bai tap C++",
-        "Lap trinh", false, 3
-    );
-
-    themCongViec(
-        dau, "Lam bao cao",
-        "CSDL", true, 2
-    );
-
-    themCongViec(
-        dau, "On tap Linked List",
-        "Lap trinh", false, 3
-    );
-
-    themCongViec(
-        dau, "Lam slide thuyet trinh",
-        "Ky nang", true, 1
-    );
-
-    themCongViec(
-        dau, "Lam bai tap OOP",
-        "Lap trinh", false, 2
-    );
-
-    themCongViec(
-        dau, "On tap SQL",
-        "CSDL", false, 3
-    );
-
-    themCongViec(
-        dau, "Viet bao cao C++",
-        "Lap trinh", true, 2
-    );
-
-    themCongViec(
-        dau, "Chuan bi thuyet trinh",
-        "Ky nang", false, 1
-    );
-
-    // Chay menu chuong trinh
-    menuChinh(dau);
-
-    // Giai phong bo nho truoc khi ket thuc
-    giaiPhongBoNho(dau);
-
-    return 0;
 }
