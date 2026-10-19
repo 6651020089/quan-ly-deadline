@@ -1,1 +1,110 @@
+struct QuanLyCongViec{
+    Slist danhSach;
+    HangDoiDeadline hangDoi;
+    NganXepLichSu lichSu;
+    CayDeadline cay;
+
+    int idTiepTheo;
+
+    void khoiTao();
+    void capNhatHangDoi();
+    void capNhatCay();
+
+    void themCongViec();
+    void xoaCongViec();
+    void hoanThanh();
+
+    void timKiem();
+    void loc();
+
+    void hienThiHangDoi();
+    void xuLyThongBao();
+
+    void hienThiCay();
+    void sapXepDeadline();
+
+    void hienThiLichSu();
+    void xoaLichSu();
+    void hoanTac();
+
+    void thongKeCongViec();
+    void menu();
+};
+
+
+void QuanLyCongViec::khoiTao(){
+
+    danhSach.init();
+
+    hangDoi.khoiTao();
+
+    lichSu.khoiTao();
+
+    cay.khoiTao();
+
+
+    // Mã đầu tiên là 1
+    idTiepTheo = 1;
+
+
+    // Chưa có công việc
+    soLuongCongViec = 0;
+}
+
+
+
+// ======================================================
+// CẬP NHẬT QUEUE
+// ======================================================
+
+
+// Ý tưởng:
+//
+// Xóa Queue cũ
+//     ↓
+// Duyệt toàn bộ công việc
+//     ↓
+// Nếu chưa hoàn thành
+//     ↓
+// Đưa vào Queue
+//
+// Vì vậy Queue luôn được xây dựng lại
+// dựa trên dữ liệu hiện tại.
+void QuanLyCongViec::capNhatHangDoi(){
+
+    // Xóa Queue cũ
+    hangDoi.xoaHet();
+
+
+    // Bắt đầu từ Linked List
+    Node *p = danhSach.head;
+
+
+    // Duyệt danh sách mã
+    while(p != NULL){
+
+        // Tìm vị trí công việc trong mảng
+        int viTri =
+        timViTriCongViec(p->data);
+
+
+        if(viTri != -1){
+
+            // Chỉ đưa công việc CHƯA hoàn thành vào Queue
+            if(
+                !danhSachCongViec[viTri]
+                .daHoanThanh
+            ){
+
+                hangDoi.them(
+                    danhSachCongViec[viTri]
+                );
+            }
+        }
+
+
+        // Sang Node tiếp theo
+        p = p->next;
+    }
+}
 
