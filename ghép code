@@ -1,3 +1,40 @@
+// Kiểm tra năm nhuận
+bool laNamNhuan(int nam) {
+    return (nam % 400 == 0) || (nam % 4 == 0 && nam % 100 != 0);
+}
+
+// Kiểm tra định dạng YYYY-MM-DD và tính hợp lệ của ngày tháng
+bool kiemTraNgayHopLe(string s) {
+    // 1. Độ dài chuẩn phải là 10 ký tự (YYYY-MM-DD)
+    if (s.length() != 10) return false;
+    if (s[4] != '-' || s[7] != '-') return false;
+
+    // 2. Kiểm tra các vị trí khác phải là chữ số
+    for (int i = 0; i < 10; i++) {
+        if (i == 4 || i == 7) continue;
+        if (!isdigit(s[i])) return false;
+    }
+
+    // 3. Tách Năm, Tháng, Ngày
+    int nam = stoi(s.substr(0, 4));
+    int thang = stoi(s.substr(5, 2));
+    int ngay = stoi(s.substr(8, 2));
+
+    // 4. Kiểm tra giới hạn Năm và Tháng
+    if (nam < 1 || thang < 1 || thang > 12 || ngay < 1) return false;
+
+    // 5. Số ngày tối đa của từng tháng
+    int ngayTrongThang[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    
+    if (thang == 2 && laNamNhuan(nam)) {
+        ngayTrongThang[2] = 29;
+    }
+
+    // 6. Kiểm tra ngày vượt quá số ngày tối đa trong tháng
+    if (ngay > ngayTrongThang[thang]) return false;
+
+    return true;
+}
 struct QuanLyCongViec{
     Slist danhSach;
     HangDoiDeadline hangDoi;
@@ -201,10 +238,16 @@ void QuanLyCongViec::themCongViec(){
     getline(cin, cv.monHoc);
 
 
-    // Nhập deadline
-    cout << "Nhap han chot (YYYY-MM-DD): ";
+    
+    // Nhập deadline có kiểm tra tính hợp lệ
+    do {
+        cout << "Nhap han chot (YYYY-MM-DD): ";
+        getline(cin, cv.hanChot);
 
-    getline(cin, cv.hanChot);
+        if (!kiemTraNgayHopLe(cv.hanChot)) {
+            cout << "-> Ngay khong hop le hoac sai dinh dang! Vui long nhap lai.\n";
+        }
+    } while (!kiemTraNgayHopLe(cv.hanChot));
 
 
     // Nhập ưu tiên
