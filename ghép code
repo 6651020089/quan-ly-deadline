@@ -108,3 +108,846 @@ void QuanLyCongViec::capNhatHangDoi(){
     }
 }
 
+// ======================================================
+// CẬP NHẬT BST
+// ======================================================
+
+
+// Ý tưởng:
+//
+// Xóa cây cũ
+//     ↓
+// Duyệt Linked List
+//     ↓
+// Lấy từng công việc
+//     ↓
+// Đưa vào BST
+//
+// BST được xây lại từ dữ liệu hiện tại.
+void QuanLyCongViec::capNhatCay(){
+
+    // Xóa cây cũ
+    cay.xoaHet();
+
+
+    // Bắt đầu từ Linked List
+    Node *p = danhSach.head;
+
+
+    // Duyệt toàn bộ danh sách
+    while(p != NULL){
+
+        // Tìm công việc trong mảng
+        int viTri =
+        timViTriCongViec(p->data);
+
+
+        if(viTri != -1){
+
+            // Thêm công việc vào BST
+            cay.them(
+                danhSachCongViec[viTri]
+            );
+        }
+
+
+        p = p->next;
+    }
+}
+
+
+
+// ======================================================
+// THÊM CÔNG VIỆC
+// ======================================================
+
+void QuanLyCongViec::themCongViec(){
+
+    // Không cho thêm quá 1000 công việc
+    if(soLuongCongViec >= MAX){
+
+        cout << "\nDa dat toi da 1000 cong viec!\n";
+
+        return;
+    }
+
+
+    // Tạo biến công việc mới
+    CongViec cv;
+
+
+    // Cấp mã tự động
+    //
+    // Nếu idTiepTheo = 1:
+    //
+    // cv.ma = 1
+    // idTiepTheo = 2
+    cv.ma = idTiepTheo++;
+
+
+    // Xóa ký tự Enter còn lại sau cin
+    cin.ignore();
+
+
+    // Nhập tên
+    cout << "\nNhap ten cong viec: ";
+
+    getline(cin, cv.ten);
+
+
+    // Nhập môn
+    cout << "Nhap mon hoc: ";
+
+    getline(cin, cv.monHoc);
+
+
+    // Nhập deadline
+    cout << "Nhap han chot (YYYY-MM-DD): ";
+
+    getline(cin, cv.hanChot);
+
+
+    // Nhập ưu tiên
+    cout << "Nhap do uu tien (1-3): ";
+
+    cin >> cv.doUuTien;
+
+
+    // Kiểm tra ưu tiên
+    while(
+        cv.doUuTien < 1
+        ||
+        cv.doUuTien > 3
+    ){
+
+        cout << "Nhap lai (1-3): ";
+
+        cin >> cv.doUuTien;
+    }
+
+
+    // Công việc mới mặc định chưa hoàn thành
+    cv.daHoanThanh = false;
+
+
+
+    // --------------------------------------------------
+    // LƯU VÀO MẢNG
+    // --------------------------------------------------
+
+    danhSachCongViec[
+        soLuongCongViec
+    ] = cv;
+
+
+    // Tăng số lượng công việc
+    soLuongCongViec++;
+
+
+
+    // --------------------------------------------------
+    // LƯU MÃ VÀO LINKED LIST
+    // --------------------------------------------------
+
+    danhSach.themCuoi(cv.ma);
+
+
+
+    // --------------------------------------------------
+    // LƯU LỊCH SỬ VÀO STACK
+    // --------------------------------------------------
+
+    LichSu ls;
+
+
+    // Ghi hành động là THEM
+    ls.hanhDong = "THEM";
+
+
+    // Lưu bản sao công việc
+    ls.congViec = cv;
+
+
+    // Đưa lịch sử vào Stack
+    lichSu.them(ls);
+
+
+
+    // --------------------------------------------------
+    // CẬP NHẬT QUEUE VÀ BST
+    // --------------------------------------------------
+
+    capNhatHangDoi();
+
+    capNhatCay();
+
+
+    cout << "\nThem thanh cong!";
+
+    cout << "\nMa cong viec: "
+         << cv.ma
+         << "\n";
+}
+
+
+
+// ======================================================
+// XÓA CÔNG VIỆC
+// ======================================================
+
+void QuanLyCongViec::xoaCongViec(){
+
+    int ma;
+
+
+    // Nhập mã cần xóa
+    cout << "\nNhap ma can xoa: ";
+
+    cin >> ma;
+
+
+    // Tìm công việc
+    int viTri =
+    timViTriCongViec(ma);
+
+
+    // Không tìm thấy
+    if(viTri == -1){
+
+        cout << "\nKhong tim thay!\n";
+
+        return;
+    }
+
+
+    // Lưu bản sao công việc trước khi xóa
+    //
+    // Vì cần bản sao này để Undo.
+    CongViec cv =
+    danhSachCongViec[viTri];
+
+
+
+    // --------------------------------------------------
+    // LƯU LỊCH SỬ
+    // --------------------------------------------------
+
+    LichSu ls;
+
+    ls.hanhDong = "XOA";
+
+    ls.congViec = cv;
+
+    lichSu.them(ls);
+
+
+
+    // --------------------------------------------------
+    // XÓA KHỎI LINKED LIST
+    // --------------------------------------------------
+
+    danhSach.xoaTheoMa(ma);
+
+
+
+    // --------------------------------------------------
+    // XÓA KHỎI MẢNG
+    // --------------------------------------------------
+
+    xoaCongViecTrongMang(ma);
+
+
+
+    // --------------------------------------------------
+    // CẬP NHẬT LẠI QUEUE VÀ BST
+    // --------------------------------------------------
+
+    capNhatHangDoi();
+
+    capNhatCay();
+
+
+    cout << "\nXoa thanh cong!\n";
+}
+
+
+
+// ======================================================
+// ĐÁNH DẤU HOÀN THÀNH
+// ======================================================
+
+void QuanLyCongViec::hoanThanh(){
+
+    int ma;
+
+
+    // Nhập mã
+    cout << "\nNhap ma cong viec: ";
+
+    cin >> ma;
+
+
+    // Tìm vị trí
+    int viTri =
+    timViTriCongViec(ma);
+
+
+    // Không tìm thấy
+    if(viTri == -1){
+
+        cout << "\nKhong tim thay!\n";
+
+        return;
+    }
+
+
+    // Nếu đã hoàn thành rồi
+    if(
+        danhSachCongViec[viTri]
+        .daHoanThanh
+    ){
+
+        cout << "\nCong viec da hoan thanh!\n";
+
+        return;
+    }
+
+
+
+    // --------------------------------------------------
+    // LƯU LỊCH SỬ ĐỂ SAU NÀY UNDO
+    // --------------------------------------------------
+
+    LichSu ls;
+
+    ls.hanhDong = "HOAN THANH";
+
+    ls.congViec =
+    danhSachCongViec[viTri];
+
+    lichSu.them(ls);
+
+
+
+    // --------------------------------------------------
+    // THAY ĐỔI TRẠNG THÁI
+    // --------------------------------------------------
+
+    danhSachCongViec[viTri]
+    .daHoanThanh = true;
+
+
+    // --------------------------------------------------
+    // CẬP NHẬT QUEUE
+    // --------------------------------------------------
+
+    // Vì công việc đã hoàn thành
+    // nên nó phải được loại khỏi Queue.
+    capNhatHangDoi();
+
+
+    cout << "\nDa hoan thanh!\n";
+}
+
+
+
+// ======================================================
+// TÌM KIẾM
+// ======================================================
+
+void QuanLyCongViec::timKiem(){
+
+    int chon;
+
+
+    cout << "\n========== TIM KIEM ==========\n";
+
+    cout << "1. Tim theo ma\n";
+
+    cout << "2. Tim theo ten\n";
+
+    cout << "3. Tim theo mon hoc\n";
+
+    cout << "Chon: ";
+
+    cin >> chon;
+
+
+
+    // --------------------------------------------------
+    // TÌM THEO MÃ
+    // --------------------------------------------------
+
+    if(chon == 1){
+
+        int ma;
+
+
+        cout << "Nhap ma: ";
+
+        cin >> ma;
+
+
+        // Tìm trong mảng
+        int viTri =
+        timViTriCongViec(ma);
+
+
+        if(viTri != -1){
+
+            // In công việc
+            inTask(
+                danhSachCongViec[viTri]
+            );
+        }
+
+        else{
+
+            cout << "\nKhong tim thay!\n";
+        }
+    }
+
+
+
+    // --------------------------------------------------
+    // TÌM THEO TÊN
+    // --------------------------------------------------
+
+    else if(chon == 2){
+
+        string ten;
+
+
+        cin.ignore();
+
+
+        cout << "Nhap ten: ";
+
+        getline(cin, ten);
+
+
+        timTheoTen(
+            danhSach,
+            ten
+        );
+    }
+
+
+
+    // --------------------------------------------------
+    // TÌM THEO MÔN
+    // --------------------------------------------------
+
+    else if(chon == 3){
+
+        string mon;
+
+
+        cin.ignore();
+
+
+        cout << "Nhap mon: ";
+
+        getline(cin, mon);
+
+
+        timTheoMon(
+            danhSach,
+            mon
+        );
+    }
+
+
+    else{
+
+        cout << "\nLua chon sai!\n";
+    }
+}
+
+
+
+// ======================================================
+// LỌC
+// ======================================================
+
+void QuanLyCongViec::loc(){
+
+    int chon;
+
+
+    cout << "\n========== LOC ==========\n";
+
+    cout << "1. Da hoan thanh\n";
+
+    cout << "2. Chua hoan thanh\n";
+
+    cout << "3. Theo do uu tien\n";
+
+    cout << "Chon: ";
+
+    cin >> chon;
+
+
+
+    // --------------------------------------------------
+    // LỌC ĐÃ HOÀN THÀNH
+    // --------------------------------------------------
+
+    if(chon == 1){
+
+        locTheoTrangThai(
+            danhSach,
+            true
+        );
+    }
+
+
+
+    // --------------------------------------------------
+    // LỌC CHƯA HOÀN THÀNH
+    // --------------------------------------------------
+
+    else if(chon == 2){
+
+        locTheoTrangThai(
+            danhSach,
+            false
+        );
+    }
+
+
+
+    // --------------------------------------------------
+    // LỌC THEO ƯU TIÊN
+    // --------------------------------------------------
+
+    else if(chon == 3){
+
+        int muc;
+
+
+        cout << "Nhap muc uu tien: ";
+
+        cin >> muc;
+
+
+        // Chỉ cho phép từ 1 đến 3
+        if(muc >= 1 && muc <= 3){
+
+            locTheoUuTien(
+                danhSach,
+                muc
+            );
+        }
+
+        else{
+
+            cout << "\nMuc uu tien tu 1 den 3!\n";
+        }
+    }
+
+
+    else{
+
+        cout << "\nLua chon sai!\n";
+    }
+}
+
+
+
+// ======================================================
+// QUEUE
+// ======================================================
+
+
+// Hiển thị Queue
+void QuanLyCongViec::hienThiHangDoi(){
+
+    // Xây dựng lại Queue
+    capNhatHangDoi();
+
+
+    // Hiển thị
+    hangDoi.hienThi();
+}
+
+
+
+// ======================================================
+// XỬ LÝ CÔNG VIỆC ĐẦU QUEUE
+// ======================================================
+
+
+// Ý tưởng:
+//
+// Cập nhật Queue
+//     ↓
+// Kiểm tra rỗng
+//     ↓
+// Lấy công việc đầu tiên
+//     ↓
+// Hiển thị công việc
+void QuanLyCongViec::xuLyThongBao(){
+
+    // Cập nhật Queue
+    capNhatHangDoi();
+
+
+    // Nếu không có công việc
+    if(hangDoi.rong()){
+
+        cout << "\nKhong co cong viec dang cho!\n";
+
+        return;
+    }
+
+
+    // Lấy công việc đầu Queue
+    CongViec cv =
+    hangDoi.layRa();
+
+
+    cout << "\nCong viec dau hang doi:\n";
+
+
+    // In công việc
+    inTask(cv);
+
+
+    // Xây dựng lại Queue
+    capNhatHangDoi();
+}
+
+
+
+// ======================================================
+// BST
+// ======================================================
+
+
+// Hiển thị cây
+void QuanLyCongViec::hienThiCay(){
+
+    // Xây dựng lại BST
+    capNhatCay();
+
+
+    // Gọi hàm hiển thị BST
+    cay.hienThi();
+}
+
+
+
+// ======================================================
+// SẮP XẾP DEADLINE
+// ======================================================
+
+void QuanLyCongViec::sapXepDeadline(){
+
+    // Cập nhật BST trước
+    capNhatCay();
+
+
+    int chon;
+
+
+    cout << "\n========== DEADLINE ==========\n";
+
+    cout << "1. Tang dan\n";
+
+    cout << "2. Giam dan\n";
+
+    cout << "Chon: ";
+
+    cin >> chon;
+
+
+
+    // Deadline tăng dần
+    if(chon == 1){
+
+        cay.tangDan();
+    }
+
+
+    // Deadline giảm dần
+    else if(chon == 2){
+
+        cay.giamDan();
+    }
+
+
+    else{
+
+        cout << "\nLua chon sai!\n";
+    }
+}
+
+
+
+// ======================================================
+// STACK / UNDO
+// ======================================================
+
+
+// Hiển thị lịch sử
+void QuanLyCongViec::hienThiLichSu(){
+
+    lichSu.hienThi();
+}
+
+
+
+// ======================================================
+// XÓA LỊCH SỬ
+// ======================================================
+
+void QuanLyCongViec::xoaLichSu(){
+
+    // Xóa toàn bộ Stack
+    lichSu.xoaHet();
+
+
+    cout << "\nDa xoa lich su!\n";
+}
+
+
+
+// ======================================================
+// UNDO
+// ======================================================
+
+
+// Đây là một trong những hàm quan trọng nhất.
+//
+// Ý tưởng:
+//
+// Stack:
+//
+// HOAN THANH 3  <- mới nhất
+// XOA 2
+// THEM 1
+//
+// Undo:
+//
+// lấy HOAN THANH 3 ra
+// rồi khôi phục trạng thái trước đó.
+void QuanLyCongViec::hoanTac(){
+
+    // Nếu Stack rỗng
+    if(lichSu.rong()){
+
+        cout << "\nKhong co thao tac de Undo!\n";
+
+        return;
+    }
+
+
+    // Lấy thao tác mới nhất
+    LichSu ls =
+    lichSu.layRa();
+
+
+
+    // ==================================================
+    // UNDO THÊM
+    // ==================================================
+
+    if(ls.hanhDong == "THEM"){
+
+        // Lấy mã công việc
+        int ma =
+        ls.congViec.ma;
+
+
+        // Vì trước đó đã thêm
+        // nên Undo = xóa công việc
+        danhSach.xoaTheoMa(ma);
+
+
+        // Xóa khỏi mảng
+        xoaCongViecTrongMang(ma);
+
+
+        cout << "\nDa Undo thao tac THEM!\n";
+    }
+
+
+
+    // ==================================================
+    // UNDO XÓA
+    // ==================================================
+
+    else if(ls.hanhDong == "XOA"){
+
+        // Kiểm tra mảng còn chỗ không
+        if(soLuongCongViec < MAX){
+
+            // Đưa công việc trở lại mảng
+            danhSachCongViec[
+                soLuongCongViec
+            ] = ls.congViec;
+
+
+            // Tăng số lượng
+            soLuongCongViec++;
+
+
+            // Đưa mã trở lại Linked List
+            danhSach.themCuoi(
+                ls.congViec.ma
+            );
+
+
+            cout << "\nDa khoi phuc cong viec!\n";
+        }
+    }
+
+
+
+    // ==================================================
+    // UNDO HOÀN THÀNH
+    // ==================================================
+
+    else if(ls.hanhDong == "HOAN THANH"){
+
+        // Tìm lại công việc
+        int viTri =
+        timViTriCongViec(
+            ls.congViec.ma
+        );
+
+
+        if(viTri != -1){
+
+            // Chuyển lại thành chưa hoàn thành
+            danhSachCongViec[viTri]
+            .daHoanThanh = false;
+        }
+
+
+        cout << "\nDa Undo trang thai hoan thanh!\n";
+    }
+
+
+
+    // ==================================================
+    // CẬP NHẬT LẠI QUEUE VÀ BST
+    // ==================================================
+
+    capNhatHangDoi();
+
+    capNhatCay();
+}
+
+
+
+// ======================================================
+// THỐNG KÊ
+// ======================================================
+
+void QuanLyCongViec::thongKeCongViec(){
+
+    // Gọi hàm thống kê
+    thongKe(danhSach);
+}
