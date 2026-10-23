@@ -1,19 +1,19 @@
-/ Sổ tay Học tập & Quản lý Deadline
+# Sổ tay học tập — bản cloud
 
-//Giới thiệu Đây là chương trình hỗ trợ quản lý công việc học tập, deadline và theo dõi tiến độ hoàn thành công việc.
+## Triển khai Render
+1. Tạo GitHub repository riêng tư và tải các file trong thư mục `so_tay_web` lên thư mục gốc repository, bao gồm `templates/index.html` và `render.yaml`.
+2. Vào Render > New > Blueprint, kết nối repository. Render sẽ đọc `render.yaml`.
+3. Thiết lập `ADMIN_PASSWORD` là mật khẩu dài, khó đoán (không lưu trong GitHub). Tên đăng nhập mặc định `admin`.
+4. Render cấp đường dẫn HTTPS. Dùng cùng đường dẫn trên điện thoại và máy tính. Trình duyệt sẽ yêu cầu tên đăng nhập và mật khẩu.
+5. Dữ liệu SQLite lưu tại `/var/data/congviec.db` trên ổ đĩa persistent disk.
 
-//Cấu trúc dữ liệu chính Danh sách liên kết đơn (Singly Linked List), Hàng đợi liên kết (Queue), Ngăn xếp (Stack), Cây nhị phân tìm kiếm (BST).
+**Chi phí:** Persistent disk yêu cầu gói Render trả phí; kiểm tra giá mới nhất trước khi triển khai. Disk không thay thế sao lưu. Định kỳ tải JSON qua nút Xuất JSON, cất trên máy hoặc Drive. Xóa disk/dịch vụ có thể làm mất dữ liệu.
 
-//Thuật toán áp dụng Duyệt danh sách liên kết; tìm kiếm theo ID, tên, môn học; lọc theo trạng thái; duyệt BST LNR/RNL để sắp xếp Deadline tăng/giảm; FIFO cho Queue; LIFO cho Stack và Undo.
+## Chạy trên Windows
+1. Cài Python. Mở CMD trong thư mục ứng dụng.
+2. `py -m pip install -r requirements.txt`
+3. `set ADMIN_PASSWORD=MatKhauRiengCuaBan`
+4. `py app.py` và mở `http://127.0.0.1:5000`.
 
-//Nghiệp vụ quản lý cơ bản Thêm, xóa và hoàn thành công việc; quản lý tên, môn học, Deadline, mức ưu tiên và trạng thái; tìm kiếm, lọc công việc; quản lý thông báo Deadline; xem Deadline tăng/giảm; quản lý lịch sử thao tác; Undo; thống kê tiến độ.
-
-//Yêu cầu kỹ thuật C++ Struct/Class, con trỏ,cài đặt Linked List, Queue, Stack, BST; sử dụng hàm và đệ quy; thao tác với chuỗi; tổ chức các cấu trúc dữ liệu trong lớp StudentTaskManager.
-
-//Thành viên nhóm
-
-Nguyễn Anh Quân
-Lê Minh Quý
-Phạm Quế Minh
-Phạm Thị Hải Yến
-Hoàng Minh Quân
+## Lưu ý
+Đây là ứng dụng một tài khoản chung, không có tài khoản riêng từng thành viên. Không sử dụng HTTP Basic qua Internet không có HTTPS. Không chạy nhiều instance ghi vào SQLite. Chưa có tính năng nhập JSON để phục hồi. Các thao tác Linked List/Queue/BST/Stack được chuyển đổi theo hành vi chứ không dịch nguyên từng dòng C++.
