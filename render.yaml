@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: so-tay-deadline
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --workers 1 --threads 4 --bind 0.0.0.0:$PORT app:app
+    healthCheckPath: /health
+    disk:
+      name: so-tay-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: DB_PATH
+        value: /var/data/congviec.db
+      - key: REQUIRE_AUTH
+        value: '1'
+      - key: ADMIN_USER
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false
