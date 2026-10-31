@@ -230,7 +230,7 @@ void HangDoiDeadline::khoiTao(){
 }
 // Kiểm tra rỗng
 bool HangDoiDeadline::rong(){
-     return head=NULL;
+     return head == NULL;
 }
 // Thêm vào cuối Queue
 void HangDoiDeadline::them(CongViec cv){
@@ -732,9 +732,9 @@ void CayDeadline::xoaHet(){
 // Chuyển chữ thường
 string vietThuong(string s){
 
-    for(int i = 0; i < s.length(); i++){
+    for(size_t i = 0; i < s.length(); i++){
 
-        s[i] = tolower(s[i]);
+        s[i] = tolower(static_cast<unsigned char>(s[i]));
     }
 
     return s;
@@ -1342,7 +1342,7 @@ void QuanLyCongViec::themCongViec(){
 
 
     // Xóa ký tự Enter còn lại sau cin
-    cin.ignore();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
 
     // Nhập tên
@@ -1678,7 +1678,7 @@ void QuanLyCongViec::timKiem(){
         string ten;
 
 
-        cin.ignore();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
 
         cout << "Nhap ten: ";
@@ -1703,7 +1703,7 @@ void QuanLyCongViec::timKiem(){
         string mon;
 
 
-        cin.ignore();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
 
         cout << "Nhap mon: ";
@@ -2381,6 +2381,71 @@ void QuanLyCongViec::menu(){
 
 
 // ======================================================
+// 11. LUU VA NAP DU LIEU TU FILE
+// ======================================================
+
+void luuFile(const string &tenFile){
+    ofstream f(tenFile.c_str());
+
+    if(!f){
+        cout << "\nKhong the mo file de luu du lieu!\n";
+        return;
+    }
+
+    for(int i = 0; i < soLuongCongViec; i++){
+        CongViec &c = danhSachCongViec[i];
+        f << c.ma << '|' << c.ten << '|' << c.monHoc << '|'
+          << c.hanChot << '|' << c.doUuTien << '|'
+          << c.daHoanThanh << '\n';
+    }
+
+    f.close();
+}
+
+void napFile(const string &tenFile, QuanLyCongViec &ql){
+    ifstream f(tenFile.c_str());
+    if(!f) return;
+
+    string dong;
+    while(getline(f, dong) && soLuongCongViec < MAX){
+        stringstream ss(dong);
+        string a, b, c, d, e, g;
+
+        if(!getline(ss, a, '|') || !getline(ss, b, '|') ||
+           !getline(ss, c, '|') || !getline(ss, d, '|') ||
+           !getline(ss, e, '|') || !getline(ss, g)){
+            continue;
+        }
+
+        try{
+            CongViec cv;
+            cv.ma = stoi(a);
+            cv.ten = b;
+            cv.monHoc = c;
+            cv.hanChot = d;
+            cv.doUuTien = stoi(e);
+            cv.daHoanThanh = (g == "1");
+
+            danhSachCongViec[soLuongCongViec++] = cv;
+            ql.danhSach.themCuoi(cv.ma);
+
+            if(cv.ma >= ql.idTiepTheo){
+                ql.idTiepTheo = cv.ma + 1;
+            }
+        }
+        catch(...){
+            // Bo qua dong du lieu khong hop le
+            continue;
+        }
+    }
+
+    f.close();
+    ql.capNhatHangDoi();
+    ql.capNhatCay();
+}
+
+
+// ======================================================
 // MAIN
 // ======================================================
 
@@ -2390,7 +2455,13 @@ int main(){
 
     quanLy.khoiTao();
 
+    // Nap du lieu da luu tu lan su dung truoc
+    napFile("congviec.txt", quanLy);
+
     quanLy.menu();
+
+    // Luu du lieu truoc khi ket thuc chuong trinh
+    luuFile("congviec.txt");
 
     return 0;
 }
